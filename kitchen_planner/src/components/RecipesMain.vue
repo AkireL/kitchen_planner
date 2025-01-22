@@ -30,7 +30,7 @@ const recipes = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        preparation: "",
+        preparation: "a preparation",
         duration: '10 minutes',
       },
       {
@@ -273,33 +273,38 @@ const getColor = (index) => {
   ];
   return colors[index - 1];
 }
-
 </script>
 
 <template> <v-layout class="rounded rounded-md">
-    <v-app-bar title="Application bar"></v-app-bar>
+    <v-app-bar title="Recetas de cocina"></v-app-bar>
     <v-navigation-drawer>
       <v-list>
-        <v-list-item title="Navigation drawer"></v-list-item>
+        <v-list-item title="Menu"></v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-main class="d-flex align-center justify-center" style="min-height: 300px; width: 100%;">
-      <v-container>
-        <v-card style="width: 100%;">
+    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
+      <v-container class="w-100">
+        <v-card>
           <v-data-iterator :items="recipes" :items-per-page="3">
             <template v-slot:default="{ items }">
               <v-container class="pa-2" fluid>
                 <v-row dense>
                   <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
                     <v-card class="pb-5" border flat>
-                      <v-card-title :class="'bg-' + getColor(item.raw.id)">{{ item.raw.day }}</v-card-title>
+                      <v-card-title :class="'bg-' + getColor(item.raw.id)">
+                        {{ item.raw.day }}
+                      </v-card-title>
                       <!-- Content or body -->
-                      <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index"
-                        @click="() => goToDetail(recipe.id)">
+                      <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">
                         <v-card-subtitle class="pt-2">
-                          {{ recipe.title }}
+                          <div class="d-flex justify-space-between align-center">
+                            <div>
+                              {{ recipe.title }}
+                            </div>
+                            <v-btn icon="mdi-delete" size="md" color="red" variant="text" style="z-index: 1;"></v-btn>
+                          </div>
                         </v-card-subtitle>
-                        <v-card-text>
+                        <v-card-text @click="() => goToDetail(recipe.id)">
                           <div class="text-truncate">
                             {{ recipe.preparation }}
                           </div>
@@ -318,7 +323,7 @@ const getColor = (index) => {
                   @click="prevPage"></v-btn>
 
                 <div class="mx-2 text-caption">
-                  Page {{ page }} of {{ pageCount }}
+                  Página {{ page }} de {{ pageCount }}
                 </div>
 
                 <v-btn :disabled="page >= pageCount" density="comfortable" icon="mdi-arrow-right" variant="tonal"
@@ -331,3 +336,10 @@ const getColor = (index) => {
     </v-main>
   </v-layout>
 </template>
+
+<style scoped>
+.v-card:has(>.v-card-text:hover) {
+  background-color: #E0E0E0;
+  cursor: pointer;
+}
+</style>
