@@ -17,11 +17,13 @@ import {
 } from 'vuetify/components'
 import { ref } from "vue"
 import { onMounted } from 'vue'
-import { recipesList } from "@/__fixture__/MockRecipes"
+import { useRecipes } from "@/composables/store"
 
 const props = defineProps<{
   id: string
 }>()
+
+const store = useRecipes()
 
 const recipe = ref({
   id: 0,
@@ -33,26 +35,7 @@ const recipe = ref({
 const loading = ref<boolean>(false);
 
 onMounted(() => {
-  const recipeTmp = recipesList.filter(item => {
-    return item.id == props.id
-  });
-
-  if (recipeTmp) {
-    if (recipeTmp[0].schedule_at) {
-      const [day, month, year] = recipeTmp[0].schedule_at.split("-");
-      const formattedDate = `${year}-${month}-${day}`;
-      recipeTmp[0].schedule_at = formattedDate
-      recipe.value = recipeTmp[0];
-
-      return;
-    }
-
-    const date = new Date().toISOString().slice(0, 10)
-    const [year, month, day] = date.split("-");
-    const formattedDate = `${year}-${month}-${day}`;
-      recipeTmp[0].schedule_at = formattedDate
-      recipe.value = recipeTmp[0];
-  }
+  recipe.value = store.getById(props.id)
 });
 
 const submit = async (event) => {

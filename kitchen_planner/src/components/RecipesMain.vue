@@ -17,10 +17,12 @@ import {
   VLayout
 } from 'vuetify/components'
 import { useRouter } from 'vue-router'
-import { recipesList } from "@/__fixture__/MockRecipes"
 import {computed } from "vue"
 import { getDayOfDate } from "@/helpers/helpers"
+import { useRecipes } from "@/composables/store"
+
 const router = useRouter()
+const store = useRecipes()
 
 const recipes = computed(() => {
   const newData = [
@@ -61,7 +63,7 @@ const recipes = computed(() => {
     },
   ];
 
-  for (const recipe of recipesList) {
+  for (const recipe of store.recipesList) {
     const day = getDayOfDate(recipe.schedule_at)
 
     newData[day]["list"].push(recipe)
