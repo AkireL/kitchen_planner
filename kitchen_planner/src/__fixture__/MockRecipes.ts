@@ -1,8 +1,5 @@
-export const recipesList = [
-  {
-    day: "Lunes",
-    id: 1,
-    list: [
+export const recipesList =
+  [
       {
         id: 1,
         title: 'Medieval Strategic War Campaigns',
@@ -11,6 +8,7 @@ export const recipesList = [
         ],
         preparation: "a preparation",
         duration: '10 minutes',
+        schedule_at: "10-01-2024",
       },
       {
         id: 2,
@@ -20,6 +18,7 @@ export const recipesList = [
         ],
         preparation: "",
         duration: '11 minutes',
+        schedule_at: "10-01-2024",
       },
       {
         id: 3,
@@ -29,6 +28,7 @@ export const recipesList = [
         ],
         preparation: "",
         duration: '9 minutes',
+        schedule_at: "10-01-2024",
       },
       {
         id: 22,
@@ -37,6 +37,7 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "10-01-2024",
         duration: '9 minutes',
       },
       {
@@ -46,6 +47,7 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "10-01-2024",
         duration: '9 minutes',
       },
       {
@@ -55,6 +57,7 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "10-01-2024",
         duration: '9 minutes',
       },
       {
@@ -64,6 +67,7 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "10-01-2024",
         duration: '9 minutes',
       },
       {
@@ -73,14 +77,9 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "10-01-2024",
         duration: '9 minutes',
       },
-    ],
-  },
-  {
-    day: "Martes",
-    id: 2,
-    list: [
       {
         id: 4,
         title: 'Medieval Strategic War Campaigns',
@@ -88,6 +87,7 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "21-01-2024",
         duration: '10 minutes',
       },
       {
@@ -97,31 +97,28 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "21-01-2024",
         duration: '11 minutes',
       },
       {
-        id: 6,
+        id: 101,
         title: '1920s Mystery Detective Chronicles',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "21-01-2024",
         duration: '9 minutes',
       },
-    ]
-  },
-  {
-    day: "Miércoles",
-    id: 3,
-    list: [
       {
-        id: 6,
+        id: 100,
         title: 'Medieval Strategic War Campaigns',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
         advanced: true,
+        schedule_at: "22-01-2024",
         duration: '10 minutes',
       },
       {
@@ -131,6 +128,7 @@ export const recipesList = [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
+        schedule_at: "22-01-2024",
         advanced: true,
         duration: '11 minutes',
       },
@@ -142,14 +140,9 @@ export const recipesList = [
         ],
         preparation: "",
         advanced: false,
+        schedule_at: "22-01-2024",
         duration: '9 minutes',
       },
-    ],
-  },
-  {
-    day: "Jueves",
-    id: 4,
-    list: [
       {
         id: 9,
         title: 'Medieval Strategic War Campaigns',
@@ -157,6 +150,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "23-01-2024",
         preparation: "",
       },
       {
@@ -166,6 +160,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "23-01-2024",
         preparation: "",
       },
       {
@@ -175,14 +170,9 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "23-01-2024",
         preparation: "",
       },
-    ]
-  },
-  {
-    day: "Viernes",
-    id: 5,
-    list: [
       {
         id: 12,
         title: 'Medieval Strategic War Campaigns',
@@ -190,6 +180,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "24-01-2024",
         preparation: "",
       },
       {
@@ -199,6 +190,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "24-01-2024",
         preparation: "",
       },
       {
@@ -208,14 +200,9 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "24-01-2024",
         preparation: "",
       },
-    ],
-  },
-  {
-    day: "Sábado",
-    id: 6,
-    list: [
       {
         id: 15,
         title: 'Medieval Strategic War Campaigns',
@@ -223,6 +210,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "25-01-2024",
         preparation: "",
       },
       {
@@ -232,6 +220,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "25-01-2024",
         preparation: "",
       },
       {
@@ -241,14 +230,9 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "25-01-2024",
         preparation: "",
       },
-    ],
-  },
-  {
-    day: "Domingo",
-    id: 7,
-    list: [
       {
         id: 18,
         title: 'Medieval Strategic War Campaigns',
@@ -256,6 +240,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "26-01-2024",
         preparation: "",
       },
       {
@@ -265,6 +250,7 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "26-01-2024",
         preparation: "",
       },
       {
@@ -274,9 +260,8 @@ export const recipesList = [
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
+        schedule_at: "26-01-2024",
         preparation: "",
       },
-    ],
-  },
 ];
 

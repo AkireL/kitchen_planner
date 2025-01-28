@@ -14,23 +14,30 @@ import {
   VBtn,
 } from 'vuetify/components'
 import { ref } from "vue"
+import { onMounted } from 'vue'
+import { recipesList } from "@/__fixture__/MockRecipes"
 
-withDefaults(
-  defineProps<{
-    id: number
-  }>(),
-  {
-    id: 88
-  }
-);
+const props = defineProps<{
+  id: number
+  }>()
 
 const recipe = ref({
-  title: "un title",
-  description: "a description",
-  ingredients: ["jitomate", "platano", "espinacas"],
-  preparation: "a text to preparation"
+  id: 0,
+  title: "",
+  description: "",
+  ingredients: [],
+  preparation: ""
 });
 
+onMounted(() => {
+  const recipeTmp = recipesList.filter(item => {
+    return item.id == props.id
+  });
+
+  if (recipeTmp) {
+    recipe.value = recipeTmp[0];
+  }
+})
 </script>
 <template>
   <v-layout class="rounded rounded-md">
@@ -59,7 +66,6 @@ const recipe = ref({
                   <v-text-field
                     v-model="recipe.title"
                     :counter="10"
-                    :rules="nameRules"
                     required
                     density="compact"
                   ></v-text-field>

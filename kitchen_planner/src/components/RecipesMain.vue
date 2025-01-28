@@ -18,12 +18,60 @@ import {
 } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import { recipesList } from "@/__fixture__/MockRecipes"
-
+import {computed } from "vue"
+import { getDayOfDate } from "@/helpers/helpers"
 const router = useRouter()
-const recipes = recipesList;
+
+const recipes = computed(() => {
+  const newData = [
+    {
+      "id": 0,
+      "day": "Domingo",
+      "list": [],
+    },
+    {
+      "id": 1,
+      "day": "Lunes",
+      "list": [],
+    },
+    {
+      "id": 2,
+      "day": "Martes",
+      "list": [],
+    },
+    {
+      "id": 3,
+      "day": "Miércoles",
+      "list": [],
+    },
+    {
+      "id": 4,
+      "day": "Jueves",
+      "list": [],
+    },
+    {
+      "id": 5,
+      "day": "Viernes",
+      "list": [],
+    },
+    {
+      "id": 6,
+      "day": "Sábado",
+      "list": [],
+    },
+  ];
+
+  for (const recipe of recipesList) {
+    const day = getDayOfDate(recipe.schedule_at)
+
+    newData[day]["list"].push(recipe)
+  }
+
+  return newData;
+});
 
 const goToDetail = (id: number) => {
-  router.push({ name: 'detail', params: { id: id } });
+  router.push({ name: 'detail', params: { id: id }});
 }
 
 const getColor = (index) => {
@@ -37,7 +85,7 @@ const getColor = (index) => {
     "indigo-darken-1",
     "deep-purple-lighten-1"
   ];
-  return colors[index - 1];
+  return colors[index];
 }
 </script>
 
@@ -82,7 +130,6 @@ const getColor = (index) => {
               </v-container>
             </template>
 
-            <!-- footer -->
             <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
               <div class="d-flex align-center justify-center pa-4">
                 <v-btn :disabled="page === 1" density="comfortable" icon="mdi-arrow-left" variant="tonal" rounded

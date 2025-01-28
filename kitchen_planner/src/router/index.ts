@@ -13,6 +13,7 @@ const router = createRouter({
     {
       path: '/detail/:id',
       name: 'detail',
+      props: true,
       component: DetailRecipe,
     },
   ],
