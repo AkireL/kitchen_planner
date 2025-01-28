@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {
+  VDivider,
   VAppBar,
   VNavigationDrawer,
   VList,
-  VListSubheader,
   VListItem,
   VMain,
   VLayout,
@@ -12,7 +12,6 @@ import {
   VTextField,
   VContainer,
   VBtn,
-  VDatePicker,
   VRow,
   VCol
 } from 'vuetify/components'
@@ -22,7 +21,7 @@ import { recipesList } from "@/__fixture__/MockRecipes"
 
 const props = defineProps<{
   id: string
-  }>()
+}>()
 
 const recipe = ref({
   id: 0,
@@ -31,6 +30,7 @@ const recipe = ref({
   ingredients: [],
   preparation: ""
 });
+const loading = ref<boolean>(false);
 
 onMounted(() => {
   const recipeTmp = recipesList.filter(item => {
@@ -38,13 +38,29 @@ onMounted(() => {
   });
 
   if (recipeTmp) {
-    const [day, month, year] = recipeTmp[0].schedule_at.split("-");
+    if (recipeTmp[0].schedule_at) {
+      const [day, month, year] = recipeTmp[0].schedule_at.split("-");
+      const formattedDate = `${year}-${month}-${day}`;
+      recipeTmp[0].schedule_at = formattedDate
+      recipe.value = recipeTmp[0];
+
+      return;
+    }
+
+    const date = new Date().toISOString().slice(0, 10)
+    const [year, month, day] = date.split("-");
     const formattedDate = `${year}-${month}-${day}`;
-    const date = new Date(formattedDate)
-    recipeTmp[0].schedule_at = date;
-    recipe.value = recipeTmp[0];
+      recipeTmp[0].schedule_at = formattedDate
+      recipe.value = recipeTmp[0];
   }
-})
+});
+
+const submit = async (event) => {
+  console.log(event);
+  loading.value = true;
+  await event;
+  loading.value = false;
+}
 </script>
 <template>
   <v-layout class="rounded rounded-md">
@@ -55,57 +71,42 @@ onMounted(() => {
       </v-list>
     </v-navigation-drawer>
     <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-        <v-container>
-          <v-btn
-                @click="() => $router.push({ name: 'home'})"
-                icon="mdi-home"
-                color="primary"
-                class="m-2"
-                size="x-small"
-            >
-            </v-btn>
+      <v-container>
+        <v-btn @click="() => $router.push({ name: 'home' })" icon="mdi-home" color="primary" class="m-2" size="x-small">
+        </v-btn>
         <v-card>
-          <v-form>
+          <v-form @submit.prevent="submit">
             <v-container>
               <v-row>
-                <v-col cols="12" md="4">
+                <v-col cols="12">
                   <div class="text-subtitle-1 text-medium-emphasis">Nombre de la receta</div>
-                  <v-text-field
-                    v-model="recipe.title"
-                    :counter="10"
-                    required
-                    density="compact"
-                  ></v-text-field>
+                  <v-text-field v-model="recipe.title" :counter="10" required density="compact"></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-date-picker
-                    title="Fecha de preparación"
-                    v-model="recipe.schedule_at"
-                    required
-                    density="compact"
-                  >
-                </v-date-picker>
+                  <div class="text-subtitle-1 text-medium-emphasis">Fecha de preparación</div>
+                  <v-text-field v-model="recipe.schedule_at" required density="compact" type="date">
+                  </v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-list style="width: 50%;">
-                    <v-list-subheader>
-                      <div class="text-subtitle-1 text-medium-emphasis">Ingredientes</div>
-                    </v-list-subheader>
-                    <v-list-item v-for="(ingredient, index) in recipe.ingredients" :key="index">
-                      <v-text-field v-model="recipe.ingredients[index]"
+                  <div class="text-subtitle-1 text-medium-emphasis p-0">Ingredientes</div>
+                  <v-list style="width: 50%;" class="p-0">
+                    <v-list-item v-for="(ingredient, index) in recipe.ingredients" :key="index" class="p-0 m-0">
+                      <v-text-field v-model="recipe.ingredients[index]" class="p-0 m-0"
                         density="compact"></v-text-field>
                     </v-list-item>
                   </v-list>
                 </v-col>
-                <v-col cols="12" style="padding: 25px;">
+                <v-col cols="12">
                   <div class="text-subtitle-1 text-medium-emphasis">Preparación</div>
-                  <v-text-field
-                    v-model="recipe.preparation"
-                    required
-                    density="compact"
-                  ></v-text-field>
+                  <v-text-field v-model="recipe.preparation" required density="compact"></v-text-field>
                 </v-col>
               </v-row>
+              <v-divider></v-divider>
+              <v-row justify="end">
+              <v-col cols="2">
+                  <v-btn :loading="loading" class="mt-2" text="Submit" type="submit" color="success" block></v-btn>
+                </v-col>
+                </v-row>
             </v-container>
           </v-form>
         </v-card>
