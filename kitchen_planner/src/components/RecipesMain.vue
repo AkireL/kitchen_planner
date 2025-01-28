@@ -64,8 +64,11 @@ const recipes = computed(() => {
   ];
 
   for (const recipe of store.recipesList) {
-    const day = getDayOfDate(recipe.schedule_at)
+    if (! recipe.schedule_at) {
+      continue;
+    }
 
+    const day = getDayOfDate(recipe.schedule_at)
     newData[day]["list"].push(recipe)
   }
 
@@ -77,7 +80,6 @@ const goToDetail = (id: number) => {
 }
 
 const getColor = (index) => {
-  console.log(index);
   const colors = [
     "pink-lighten-1",
     "amber-accent-2",

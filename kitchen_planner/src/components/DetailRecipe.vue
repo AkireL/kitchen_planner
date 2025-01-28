@@ -18,30 +18,33 @@ import {
 import { ref } from "vue"
 import { onMounted } from 'vue'
 import { useRecipes } from "@/composables/store"
+import type { Recipe } from '@/types';
 
 const props = defineProps<{
   id: string
 }>()
 
-const store = useRecipes()
+const store = useRecipes();
 
-const recipe = ref({
+const recipe = ref<Recipe>({
   id: 0,
   title: "",
   description: "",
   ingredients: [],
   preparation: ""
 });
+
 const loading = ref<boolean>(false);
 
 onMounted(() => {
-  recipe.value = store.getById(props.id)
+  recipe.value = {...store.getById(props.id)}
 });
 
 const submit = async (event) => {
   console.log(event);
   loading.value = true;
   await event;
+  store.updateRecipe(recipe.value);
   loading.value = false;
 }
 </script>
@@ -63,7 +66,7 @@ const submit = async (event) => {
               <v-row>
                 <v-col cols="12">
                   <div class="text-subtitle-1 text-medium-emphasis">Nombre de la receta</div>
-                  <v-text-field v-model="recipe.title" :counter="10" required density="compact"></v-text-field>
+                  <v-text-field v-model="recipe.title" required density="compact"></v-text-field>
                 </v-col>
                 <v-col cols="12">
                   <div class="text-subtitle-1 text-medium-emphasis">Fecha de preparación</div>
