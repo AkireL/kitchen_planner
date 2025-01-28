@@ -12,13 +12,16 @@ import {
   VTextField,
   VContainer,
   VBtn,
+  VDatePicker,
+  VRow,
+  VCol
 } from 'vuetify/components'
 import { ref } from "vue"
 import { onMounted } from 'vue'
 import { recipesList } from "@/__fixture__/MockRecipes"
 
 const props = defineProps<{
-  id: number
+  id: string
   }>()
 
 const recipe = ref({
@@ -35,6 +38,10 @@ onMounted(() => {
   });
 
   if (recipeTmp) {
+    const [day, month, year] = recipeTmp[0].schedule_at.split("-");
+    const formattedDate = `${year}-${month}-${day}`;
+    const date = new Date(formattedDate)
+    recipeTmp[0].schedule_at = date;
     recipe.value = recipeTmp[0];
   }
 })
@@ -71,6 +78,15 @@ onMounted(() => {
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12">
+                  <v-date-picker
+                    title="Fecha de preparación"
+                    v-model="recipe.schedule_at"
+                    required
+                    density="compact"
+                  >
+                </v-date-picker>
+                </v-col>
+                <v-col cols="12">
                   <v-list style="width: 50%;">
                     <v-list-subheader>
                       <div class="text-subtitle-1 text-medium-emphasis">Ingredientes</div>
@@ -80,10 +96,9 @@ onMounted(() => {
                         density="compact"></v-text-field>
                     </v-list-item>
                   </v-list>
-
                 </v-col>
-                <div class="text-subtitle-1 text-medium-emphasis">Preparación</div>
-                <v-col cols="12" md="4">
+                <v-col cols="12" style="padding: 25px;">
+                  <div class="text-subtitle-1 text-medium-emphasis">Preparación</div>
                   <v-text-field
                     v-model="recipe.preparation"
                     required
