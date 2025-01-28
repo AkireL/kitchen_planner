@@ -1,5 +1,5 @@
 export function getDayOfDate(date: string) {
-  const [day, month, year] = date.split("-");
+  const [year, month, day] = date.split("-");
   const formattedDate = `${year}-${month}-${day}`;
 
   const dateTmp = new Date(formattedDate);

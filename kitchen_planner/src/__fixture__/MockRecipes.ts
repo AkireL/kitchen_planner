@@ -1,4 +1,6 @@
-export const recipesList =
+import type { Recipe } from '@/types';
+
+export const recipesList: Recipe[] =
   [
       {
         id: 1,
@@ -8,7 +10,7 @@ export const recipesList =
         ],
         preparation: "a preparation",
         duration: '10 minutes',
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
       },
       {
         id: 2,
@@ -18,7 +20,7 @@ export const recipesList =
         ],
         preparation: "",
         duration: '11 minutes',
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
       },
       {
         id: 3,
@@ -28,7 +30,7 @@ export const recipesList =
         ],
         preparation: "",
         duration: '9 minutes',
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
       },
       {
         id: 22,
@@ -37,7 +39,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
         duration: '9 minutes',
       },
       {
@@ -47,7 +49,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
         duration: '9 minutes',
       },
       {
@@ -57,7 +59,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
         duration: '9 minutes',
       },
       {
@@ -67,7 +69,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
         duration: '9 minutes',
       },
       {
@@ -77,7 +79,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "10-01-2024",
+        schedule_at: "2024-01-10",
         duration: '9 minutes',
       },
       {
@@ -87,7 +89,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "21-01-2024",
+        schedule_at: "2024-01-21",
         duration: '10 minutes',
       },
       {
@@ -97,7 +99,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "21-01-2024",
+        schedule_at: "2024-01-21",
         duration: '11 minutes',
       },
       {
@@ -107,7 +109,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "21-01-2024",
+        schedule_at: "2024-01-21",
         duration: '9 minutes',
       },
       {
@@ -117,8 +119,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        advanced: true,
-        schedule_at: "22-01-2024",
+        schedule_at: "2024-01-22",
         duration: '10 minutes',
       },
       {
@@ -128,8 +129,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "22-01-2024",
-        advanced: true,
+        schedule_at: "2024-01-22",
         duration: '11 minutes',
       },
       {
@@ -139,8 +139,7 @@ export const recipesList =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        advanced: false,
-        schedule_at: "22-01-2024",
+        schedule_at: "2024-01-22",
         duration: '9 minutes',
       },
       {
@@ -150,7 +149,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "23-01-2024",
+        schedule_at: "2024-01-23",
         preparation: "",
       },
       {
@@ -160,7 +159,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "23-01-2024",
+        schedule_at: "2024-01-23",
         preparation: "",
       },
       {
@@ -170,7 +169,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "23-01-2024",
+        schedule_at: "2024-01-23",
         preparation: "",
       },
       {
@@ -180,7 +179,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "24-01-2024",
+        schedule_at: "2024-01-24",
         preparation: "",
       },
       {
@@ -190,7 +189,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "24-01-2024",
+        schedule_at: "2024-01-24",
         preparation: "",
       },
       {
@@ -200,7 +199,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "24-01-2024",
+        schedule_at: "2024-01-24",
         preparation: "",
       },
       {
@@ -210,7 +209,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "25-01-2024",
+        schedule_at: "2024-01-25",
         preparation: "",
       },
       {
@@ -220,7 +219,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "25-01-2024",
+        schedule_at: "2024-01-25",
         preparation: "",
       },
       {
@@ -230,7 +229,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "25-01-2024",
+        schedule_at: "2024-01-25",
         preparation: "",
       },
       {
@@ -240,7 +239,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "26-01-2024",
+        schedule_at: "2024-01-26",
         preparation: "",
       },
       {
@@ -250,7 +249,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "26-01-2024",
+        schedule_at: "2024-01-26",
         preparation: "",
       },
       {
@@ -260,7 +259,7 @@ export const recipesList =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "26-01-2024",
+        schedule_at: "2024-01-26",
         preparation: "",
       },
 ];
