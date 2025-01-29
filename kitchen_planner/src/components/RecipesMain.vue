@@ -14,54 +14,25 @@ import {
   VList,
   VListItem,
   VMain,
-  VLayout
+  VLayout,
+  VDialog,
+  VCardActions,
 } from 'vuetify/components'
 import { useRouter } from 'vue-router'
-import {computed } from "vue"
+import { computed, ref } from "vue"
 import { getDayOfDate } from "@/helpers/helpers"
 import { useRecipes } from "@/composables/store"
+import { initData } from "@/helpers/days"
+import { getColor } from "@/helpers/color"
 
-const router = useRouter()
-const store = useRecipes()
+const router = useRouter();
+const store = useRecipes();
+
+const isOpen = ref<boolean>(false);
+const recipeSelected = ref<Recipe | null>(null);
 
 const recipes = computed(() => {
-  const newData = [
-    {
-      "id": 0,
-      "day": "Domingo",
-      "list": [],
-    },
-    {
-      "id": 1,
-      "day": "Lunes",
-      "list": [],
-    },
-    {
-      "id": 2,
-      "day": "Martes",
-      "list": [],
-    },
-    {
-      "id": 3,
-      "day": "Miércoles",
-      "list": [],
-    },
-    {
-      "id": 4,
-      "day": "Jueves",
-      "list": [],
-    },
-    {
-      "id": 5,
-      "day": "Viernes",
-      "list": [],
-    },
-    {
-      "id": 6,
-      "day": "Sábado",
-      "list": [],
-    },
-  ];
+const newData = initData();
 
   for (const recipe of store.recipesList) {
     if (! recipe.schedule_at) {
@@ -69,7 +40,7 @@ const recipes = computed(() => {
     }
 
     const day = getDayOfDate(recipe.schedule_at)
-    newData[day]["list"].push(recipe)
+    newData[day].list.push(recipe)
   }
 
   return newData;
@@ -79,17 +50,15 @@ const goToDetail = (id: number) => {
   router.push({ name: 'detail', params: { id: id }});
 }
 
-const getColor = (index) => {
-  const colors = [
-    "pink-lighten-1",
-    "amber-accent-2",
-    "lime-darken-2",
-    "light-green-darken-3",
-    "blue-darken-2",
-    "indigo-darken-1",
-    "deep-purple-lighten-1"
-  ];
-  return colors[index];
+const selectedItemToRemove = (recipe: Recipe) => {
+  isOpen.value = ! isOpen.value;
+  recipeSelected.value = recipe;
+}
+
+const removeRecipe = () => {
+  store.removeRecipe(recipeSelected.value.id);
+  isOpen.value = false;
+  recipeSelected.value = null;
 }
 </script>
 
@@ -119,7 +88,14 @@ const getColor = (index) => {
                             <div>
                               {{ recipe.title }}
                             </div>
-                            <v-btn icon="mdi-delete" size="md" color="red" variant="text" style="z-index: 1;"></v-btn>
+                            <v-btn
+                              @click="() => selectedItemToRemove(recipe)"
+                              icon="mdi-delete"
+                              size="md"
+                              color="red"
+                              variant="text"
+                              style="z-index: 1;"
+                            ></v-btn>
                           </div>
                         </v-card-subtitle>
                         <v-card-text @click="() => goToDetail(recipe.id)">
@@ -152,6 +128,17 @@ const getColor = (index) => {
       </v-container>
     </v-main>
   </v-layout>
+
+  <!-- Modal -->
+  <v-dialog v-model="isOpen" width="auto">
+        <v-card title="Confirmación">
+            <v-card-text>¿Desea eliminar? </v-card-text>
+            <v-card-actions>
+                <v-btn color="primary" @click="removeRecipe">Aceptar</v-btn>
+                <v-btn color="primary" @click="() => { isOpen = false; recipeSelected = null }">Cancelar</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <style scoped>
