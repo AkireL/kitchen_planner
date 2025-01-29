@@ -35,7 +35,7 @@ const recipes = computed(() => {
   const newData = initData();
 
   for (const recipe of store.recipesList) {
-    if (! recipe.schedule_at) {
+    if (!recipe.schedule_at) {
       continue;
     }
 
@@ -48,11 +48,11 @@ const recipes = computed(() => {
 });
 
 const goToDetail = (id: number) => {
-  router.push({ name: 'recipeDetail', params: { id: id }});
+  router.push({ name: 'recipeDetail', params: { id: id } });
 }
 
 const selectedItemToRemove = (recipe: Recipe) => {
-  isOpen.value = ! isOpen.value;
+  isOpen.value = !isOpen.value;
   recipeSelected.value = recipe;
 }
 
@@ -81,19 +81,14 @@ const addedRecipe = () => {
             <template v-slot:default="{ items }">
               <v-container class="pa-2" fluid>
                 <div class="d-flex justify-space-between align-center pb-2">
-                  <v-btn
-                    @click="() => addedRecipe()"
-                    icon="mdi-plus"
-                    size="x-small"
-                    color="success"
-                    density="comfortable"
-                  ></v-btn>
+                  <v-btn @click="() => addedRecipe()" icon="mdi-plus" size="x-small" color="success"
+                    density="comfortable"></v-btn>
                 </div>
                 <v-row dense>
                   <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
-                    <v-card class="pb-5 overflow-auto" border flat style=" max-height: 500px;" >
+                    <v-card class="pb-5 overflow-auto" flat style=" max-height: 500px;">
                       <v-card-title :class="'bg-' + getColor(item.raw.id)">
-                            {{ item.raw.day }} <span class="text-caption">{{item.raw.date}} </span>
+                        {{ item.raw.day }} <span class="text-caption">{{ item.raw.date }} </span>
                       </v-card-title>
                       <!-- Content or body -->
                       <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">
@@ -123,18 +118,26 @@ const addedRecipe = () => {
                 </v-row>
               </v-container>
             </template>
-
             <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
               <div class="d-flex align-center justify-center pa-4">
-                <v-btn :disabled="page === 1" density="comfortable" icon="mdi-arrow-left" variant="tonal" rounded
-                  @click="prevPage"></v-btn>
-
+                <v-btn
+                  :disabled="page === 1"
+                  density="comfortable"
+                  icon="mdi-arrow-left"
+                  variant="tonal"
+                  rounded
+                  @click="prevPage"
+                ></v-btn>
                 <div class="mx-2 text-caption">
                   Página {{ page }} de {{ pageCount }}
                 </div>
-
-                <v-btn :disabled="page >= pageCount" density="comfortable" icon="mdi-arrow-right" variant="tonal"
-                  rounded @click="nextPage"></v-btn>
+                <v-btn
+                  :disabled="page >= pageCount"
+                  density="comfortable"
+                  icon="mdi-arrow-right"
+                  variant="tonal"
+                  rounded @click="nextPage"
+                ></v-btn>
               </div>
             </template>
           </v-data-iterator>
@@ -145,14 +148,14 @@ const addedRecipe = () => {
 
   <!-- Modal -->
   <v-dialog v-model="isOpen" width="auto">
-        <v-card title="Confirmación">
-            <v-card-text>¿Desea eliminar? </v-card-text>
-            <v-card-actions>
-                <v-btn color="primary" @click="removeRecipe">Aceptar</v-btn>
-                <v-btn color="primary" @click="() => { isOpen = false; recipeSelected = null }">Cancelar</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+    <v-card title="Confirmación">
+      <v-card-text>¿Desea eliminar? </v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="removeRecipe">Aceptar</v-btn>
+        <v-btn color="primary" @click="() => { isOpen = false; recipeSelected = null }">Cancelar</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
