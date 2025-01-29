@@ -34,13 +34,21 @@ export const useRecipes = defineStore('search-filters', () => {
 
     if (index) {
       recipesList.value[index] = data
-      // TODO: update data
+      // TODO: update data in database
     }
+  }
+
+  const removeRecipe = (id: number) => {
+    // TODO: remove data in database
+    recipesList.value = recipesList.value.filter((item) => {
+      return item.id != id
+    });
   }
 
   return {
     recipesList,
     getById,
     updateRecipe,
+    removeRecipe,
   }
 })
