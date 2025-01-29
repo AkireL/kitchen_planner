@@ -1,5 +1,5 @@
 export interface Recipe {
-  id: number
+  id: number | string
   title: string | null
   ingredients: string[]
   preparation: string
@@ -8,7 +8,7 @@ export interface Recipe {
 }
 
 export interface Recipes {
-  id: number
+  id: number | string
   day: string
   date: string | null
   list: Recipe[]
