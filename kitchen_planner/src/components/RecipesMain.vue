@@ -48,7 +48,7 @@ const recipes = computed(() => {
 });
 
 const goToDetail = (id: number) => {
-  router.push({ name: 'detail', params: { id: id }});
+  router.push({ name: 'recipeDetail', params: { id: id }});
 }
 
 const selectedItemToRemove = (recipe: Recipe) => {
@@ -62,8 +62,8 @@ const removeRecipe = () => {
   recipeSelected.value = null;
 }
 
-const addedRecipe = (date: string) => {
-  router.push({ name: 'detail', params: { date:date }});
+const addedRecipe = () => {
+  router.push({ name: 'createRecipe' });
 }
 </script>
 
@@ -80,22 +80,20 @@ const addedRecipe = (date: string) => {
           <v-data-iterator :items="recipes" :items-per-page="3">
             <template v-slot:default="{ items }">
               <v-container class="pa-2" fluid>
+                <div class="d-flex justify-space-between align-center pb-2">
+                  <v-btn
+                    @click="() => addedRecipe()"
+                    icon="mdi-plus"
+                    size="x-small"
+                    color="success"
+                    density="comfortable"
+                  ></v-btn>
+                </div>
                 <v-row dense>
                   <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
                     <v-card class="pb-5 overflow-auto" border flat style=" max-height: 500px;" >
                       <v-card-title :class="'bg-' + getColor(item.raw.id)">
-                        <div class="d-flex justify-space-between align-center">
-                          <div cols="6">
                             {{ item.raw.day }}
-                          </div>
-                            <v-btn
-                              @click="() => addedRecipe(item.raw.date)"
-                              icon="mdi-plus"
-                              size="x-small"
-                              color="success"
-                              density="comfortable"
-                            ></v-btn>
-                        </div>
                       </v-card-title>
                       <!-- Content or body -->
                       <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">

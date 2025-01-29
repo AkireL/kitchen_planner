@@ -12,3 +12,9 @@ export function getDateByString(date: string) {
   return `${year}-${month}-${day}`;
 }
 
+
+export function getTodayDate() {
+  const date = new Date().toISOString().slice(0, 10)
+  const [year, month, day] = date.split("-");
+  return `${year}-${month}-${day}`;
+}

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import DetailRecipe from '@/components/DetailRecipe.vue'
 import RecipesMain from '@/components/RecipesMain.vue'
+import CreateRecipe from '@/components/CreateRecipe.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,16 +12,15 @@ const router = createRouter({
       component: RecipesMain,
     },
     {
-      path: '/detail/:id',
-      name: 'detail',
+      path: '/recipe/:id',
+      name: 'recipeDetail',
       props: true,
       component: DetailRecipe,
     },
     {
-      path: '/newRecipe/:date/',
-      name: 'newRecipe',
-      props: true,
-      component: DetailRecipe,
+      path: '/recipe',
+      name: 'createRecipe',
+      component: CreateRecipe,
     },
   ],
 })

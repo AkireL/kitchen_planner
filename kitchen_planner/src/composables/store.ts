@@ -45,9 +45,15 @@ export const useRecipes = defineStore('search-filters', () => {
     });
   }
 
+  const addRecipe =  (newItem: Recipe) => {
+      recipesList.value.push(newItem);
+      // TODO: store in database
+  }
+
   return {
     recipesList,
     getById,
+    addRecipe,
     updateRecipe,
     removeRecipe,
   }
