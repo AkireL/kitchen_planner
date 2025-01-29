@@ -19,6 +19,8 @@ import { ref } from "vue"
 import { useRouter } from 'vue-router'
 import { useRecipes } from "@/composables/store"
 import { getTodayDate } from "@/helpers/helpers"
+import type { Recipe } from '@/types';
+import Ingredients from "@/components/Ingredients.vue"
 
 const store = useRecipes();
 const router = useRouter();
@@ -56,9 +58,6 @@ const addMoreIngredients = () => {
   alert("No more items");
 }
 
-const removeIngredient = (index) => {
-  recipe.value.ingredients = recipe.value.ingredients.filter((item, i) => index != i);
-}
 </script>
 <template>
 <v-layout class="rounded rounded-md">
@@ -111,32 +110,9 @@ const removeIngredient = (index) => {
                       density="comfortable"
                     ></v-btn>
                   </div>
-                  <v-list style="width: 50%;" class="p-0">
-                    <v-list-item
-                      v-for="(ingredient, index) in recipe.ingredients"
-                      :key="index"
-                      class="p-0 m-0"
-                      >
-                      <div class="d-flex ga-1">
-                        <v-text-field
-                          v-model="recipe.ingredients[index]"
-                          required
-                          hide-details="auto"
-                          style="align-self: center"
-                          density="compact"
-                          >
-                        </v-text-field>
-                        <v-btn
-                          @click="() => removeIngredient(index)"
-                          icon="mdi-delete"
-                          size="x-small"
-                          style="align-self: center"
-                          density="comfortable"
-                          class="mr-1"
-                        ></v-btn>
-                      </div>
-                    </v-list-item>
-                  </v-list>
+                  <Ingredients
+                    v-model="recipe.ingredients"
+                    />
                 </v-col>
                 <v-col cols="12">
                   <div class="text-subtitle-1 text-medium-emphasis">Preparación</div>
