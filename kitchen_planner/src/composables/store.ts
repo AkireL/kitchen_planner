@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { recipesList as data } from '@/__fixture__/MockRecipes'
 import type { Recipe } from '@/types'
+import { v4 as uuid } from 'uuid';
 
 export const useRecipes = defineStore('search-filters', () => {
   const recipesList = ref<Recipe[]>(data)
@@ -46,6 +47,7 @@ export const useRecipes = defineStore('search-filters', () => {
   }
 
   const addRecipe =  (newItem: Recipe) => {
+      newItem.id = uuid();
       recipesList.value.push(newItem);
       // TODO: store in database
   }
