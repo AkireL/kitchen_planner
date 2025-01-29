@@ -16,11 +16,17 @@ import {
   VCol
 } from 'vuetify/components'
 import { ref } from "vue"
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useRecipes } from "@/composables/store"
 import { getTodayDate } from "@/helpers/helpers"
 import type { Recipe } from '@/types';
 import Ingredients from "@/components/Ingredients.vue"
+
+
+const props = defineProps<{
+  id?: string | null,
+}>();
 
 const store = useRecipes();
 const router = useRouter();
@@ -34,6 +40,12 @@ const recipe = ref<Recipe>({
   preparation: "",
 });
 
+onMounted(() => {
+  if (props.id) {
+    recipe.value = {...store.getById(props.id)}
+  }
+});
+
 const rules = (value) => !!value || "Este campo es obligatorio";
 
 const loading = ref<boolean>(false);
@@ -44,6 +56,13 @@ const submit = async (event) => {
   }
 
   loading.value = true;
+
+  if (props.id) {
+    store.updateRecipe(recipe.value);
+    loading.value = false;
+    router.push({ name: 'home'});
+    return;
+  }
   await event;
   store.addRecipe(recipe.value);
   loading.value = false;

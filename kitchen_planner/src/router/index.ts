@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import DetailRecipe from '@/components/DetailRecipe.vue'
 import RecipesMain from '@/components/RecipesMain.vue'
 import CreateRecipe from '@/components/CreateRecipe.vue'
 
@@ -12,14 +11,9 @@ const router = createRouter({
       component: RecipesMain,
     },
     {
-      path: '/recipe/:id',
-      name: 'recipeDetail',
+      path: '/recipe/:id?',
+      name: 'recipeForm',
       props: true,
-      component: DetailRecipe,
-    },
-    {
-      path: '/recipe',
-      name: 'createRecipe',
       component: CreateRecipe,
     },
   ],

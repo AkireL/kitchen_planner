@@ -48,7 +48,7 @@ const recipes = computed(() => {
 });
 
 const goToDetail = (id: number) => {
-  router.push({ name: 'recipeDetail', params: { id: id } });
+  router.push({ name: 'recipeForm', params: { id: id } });
 }
 
 const selectedItemToRemove = (recipe: Recipe) => {
@@ -63,7 +63,7 @@ const removeRecipe = () => {
 }
 
 const addedRecipe = () => {
-  router.push({ name: 'createRecipe' });
+  router.push({ name: 'recipeForm' });
 }
 </script>
 
