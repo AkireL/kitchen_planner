@@ -16,6 +16,12 @@ const router = createRouter({
       props: true,
       component: DetailRecipe,
     },
+    {
+      path: '/newRecipe/:date/',
+      name: 'newRecipe',
+      props: true,
+      component: DetailRecipe,
+    },
   ],
 })
 

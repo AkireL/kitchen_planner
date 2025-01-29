@@ -20,7 +20,7 @@ import {
 } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import { computed, ref } from "vue"
-import { getDayOfDate } from "@/helpers/helpers"
+import { getDayOfDate, getDateByString } from "@/helpers/helpers"
 import { useRecipes } from "@/composables/store"
 import { initData } from "@/helpers/days"
 import { getColor } from "@/helpers/color"
@@ -32,7 +32,7 @@ const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
 
 const recipes = computed(() => {
-const newData = initData();
+  const newData = initData();
 
   for (const recipe of store.recipesList) {
     if (! recipe.schedule_at) {
@@ -40,6 +40,7 @@ const newData = initData();
     }
 
     const day = getDayOfDate(recipe.schedule_at)
+    newData[day].date = getDateByString(recipe.schedule_at)
     newData[day].list.push(recipe)
   }
 
@@ -60,6 +61,10 @@ const removeRecipe = () => {
   isOpen.value = false;
   recipeSelected.value = null;
 }
+
+const addedRecipe = (date: string) => {
+  router.push({ name: 'detail', params: { date:date }});
+}
 </script>
 
 <template> <v-layout class="rounded rounded-md">
@@ -79,7 +84,18 @@ const removeRecipe = () => {
                   <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
                     <v-card class="pb-5 overflow-auto" border flat style=" max-height: 500px;" >
                       <v-card-title :class="'bg-' + getColor(item.raw.id)">
-                        {{ item.raw.day }}
+                        <div class="d-flex justify-space-between align-center">
+                          <div cols="6">
+                            {{ item.raw.day }}
+                          </div>
+                            <v-btn
+                              @click="() => addedRecipe(item.raw.date)"
+                              icon="mdi-plus"
+                              size="x-small"
+                              color="success"
+                              density="comfortable"
+                            ></v-btn>
+                        </div>
                       </v-card-title>
                       <!-- Content or body -->
                       <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">

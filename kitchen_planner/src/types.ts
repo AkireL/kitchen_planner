@@ -10,5 +10,6 @@ export interface Recipe {
 export interface Recipes {
   id: number
   day: string
+  date: string | null
   list: Recipe[]
 }
