@@ -93,7 +93,7 @@ const addedRecipe = () => {
                   <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
                     <v-card class="pb-5 overflow-auto" border flat style=" max-height: 500px;" >
                       <v-card-title :class="'bg-' + getColor(item.raw.id)">
-                            {{ item.raw.day }}
+                            {{ item.raw.day }} <span class="text-caption">{{item.raw.date}} </span>
                       </v-card-title>
                       <!-- Content or body -->
                       <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">
