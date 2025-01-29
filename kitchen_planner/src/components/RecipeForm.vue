@@ -23,7 +23,6 @@ import { getTodayDate } from "@/helpers/helpers"
 import type { Recipe } from '@/types';
 import Ingredients from "@/components/Ingredients.vue"
 
-
 const props = defineProps<{
   id?: string | null,
 }>();
