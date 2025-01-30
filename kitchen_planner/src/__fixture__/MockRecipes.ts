@@ -10,106 +10,106 @@ export const recipesList: Recipe[] =
         ],
         preparation: "a preparation",
         duration: '10 minutes',
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
       },
       {
         id: 2,
-        title: 'Underwater VR Exploration Adventure',
+        title: 'two recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
         duration: '11 minutes',
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
       },
       {
         id: 3,
-        title: '1920s Mystery Detective Chronicles',
+        title: 'three recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
         duration: '9 minutes',
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
       },
       {
         id: 22,
-        title: '1920s Mystery Detective Chronicles',
+        title: 'four recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
         duration: '9 minutes',
       },
       {
         id: 23,
-        title: '1920s Mystery Detective Chronicles',
+        title: 'five recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
         duration: '9 minutes',
       },
       {
         id: 24,
-        title: '1920s Mystery Detective Chronicles',
+        title: 'six recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
         duration: '9 minutes',
       },
       {
         id: 26,
-        title: '1920s Mystery Detective Chronicles',
+        title: 'six recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
         duration: '9 minutes',
       },
       {
         id: 27,
-        title: '1920s Mystery Detective Chronicles',
+        title: 'seven recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2025-01-10",
+        schedule_at: "2025-01-20",
         duration: '9 minutes',
       },
       {
         id: 4,
-        title: 'Medieval Strategic War Campaigns',
+        title: 'eight recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2024-01-21",
+        schedule_at: "2025-01-21",
         duration: '10 minutes',
       },
       {
         id: 5,
-        title: 'Underwater VR Exploration Adventure',
+        title: 'nine recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2024-01-21",
+        schedule_at: "2025-01-21",
         duration: '11 minutes',
       },
       {
         id: 101,
-        title: '1920s Mystery Detective Chronicles',
+        title: 'ten recipe',
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2024-01-21",
+        schedule_at: "2025-01-21",
         duration: '9 minutes',
       },
       {
@@ -119,7 +119,7 @@ export const recipesList: Recipe[] =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2024-01-22",
+        schedule_at: "2025-01-22",
         duration: '10 minutes',
       },
       {
@@ -129,7 +129,7 @@ export const recipesList: Recipe[] =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2024-01-22",
+        schedule_at: "2025-01-22",
         duration: '11 minutes',
       },
       {
@@ -139,7 +139,7 @@ export const recipesList: Recipe[] =
           "tomate", "chiles", "ajo"
         ],
         preparation: "",
-        schedule_at: "2024-01-22",
+        schedule_at: "2025-01-22",
         duration: '9 minutes',
       },
       {
@@ -149,7 +149,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-23",
+        schedule_at: "2025-01-23",
         preparation: "",
       },
       {
@@ -159,7 +159,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-23",
+        schedule_at: "2025-01-23",
         preparation: "",
       },
       {
@@ -169,7 +169,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-23",
+        schedule_at: "2025-01-23",
         preparation: "",
       },
       {
@@ -179,7 +179,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-24",
+        schedule_at: "2025-01-24",
         preparation: "",
       },
       {
@@ -189,7 +189,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-24",
+        schedule_at: "2025-01-24",
         preparation: "",
       },
       {
@@ -199,7 +199,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-24",
+        schedule_at: "2025-01-24",
         preparation: "",
       },
       {
@@ -209,7 +209,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-25",
+        schedule_at: "2025-01-25",
         preparation: "",
       },
       {
@@ -219,7 +219,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-25",
+        schedule_at: "2025-01-25",
         preparation: "",
       },
       {
@@ -229,7 +229,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-25",
+        schedule_at: "2025-01-25",
         preparation: "",
       },
       {
@@ -239,7 +239,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-26",
+        schedule_at: "2025-01-26",
         preparation: "",
       },
       {
@@ -249,7 +249,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-26",
+        schedule_at: "2025-01-26",
         preparation: "",
       },
       {
@@ -259,7 +259,7 @@ export const recipesList: Recipe[] =
         ingredients: [
           "tomate", "chiles", "ajo"
         ],
-        schedule_at: "2024-01-26",
+        schedule_at: "2025-01-26",
         preparation: "",
       },
 ];
