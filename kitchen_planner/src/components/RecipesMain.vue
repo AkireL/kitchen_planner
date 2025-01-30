@@ -19,8 +19,8 @@ import {
   VCardActions,
 } from 'vuetify/components'
 import { useRouter } from 'vue-router'
-import { computed, ref } from "vue"
-import { getDayOfDate, getDateByString } from "@/helpers/helpers"
+import { computed, ref, onMounted } from "vue"
+import { getDayOfDate, getDateByString, getFirstAndLastDayOfWeek } from "@/helpers/helpers"
 import { useRecipes } from "@/composables/store"
 import { initData } from "@/helpers/days"
 import { getColor } from "@/helpers/color"
@@ -30,6 +30,13 @@ const store = useRecipes();
 
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
+const selectedDate = ref({firstDate: "", lastDate: ""});
+
+onMounted(() => {
+  const {firstDay, lastDay} = getFirstAndLastDayOfWeek(new Date());
+  selectedDate.value.firstDate = firstDay;
+  selectedDate.value.lastDate = lastDay;
+})
 
 const recipes = computed(() => {
   const newData = initData();
@@ -66,8 +73,8 @@ const addedRecipe = () => {
   router.push({ name: 'recipeForm' });
 }
 </script>
-
-<template> <v-layout class="rounded rounded-md">
+<template>
+  <v-layout class="rounded rounded-md">
     <v-app-bar title="Recetas de cocina"></v-app-bar>
     <v-navigation-drawer>
       <v-list>
@@ -82,7 +89,9 @@ const addedRecipe = () => {
               <v-container class="pa-2" fluid>
                 <div class="d-flex justify-space-between align-center pb-2">
                   <v-btn @click="() => addedRecipe()" icon="mdi-plus" size="x-small" color="success"
-                    density="comfortable"></v-btn>
+                    density="comfortable">
+                  </v-btn>
+                  <div>{{ selectedDate.firstDate != ""? selectedDate.firstDate.toISOString()?.split('T')[0] : "" }} - {{ selectedDate.lastDate != ""? selectedDate.lastDate.toISOString()?.split('T')[0] : "" }}</div>
                 </div>
                 <v-row dense>
                   <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
@@ -97,14 +106,8 @@ const addedRecipe = () => {
                             <div>
                               {{ recipe.title }}
                             </div>
-                            <v-btn
-                              @click="() => selectedItemToRemove(recipe)"
-                              icon="mdi-delete"
-                              size="md"
-                              color="red"
-                              variant="text"
-                              style="z-index: 1;"
-                            ></v-btn>
+                            <v-btn @click="() => selectedItemToRemove(recipe)" icon="mdi-delete" size="md" color="red"
+                              variant="text" style="z-index: 1;"></v-btn>
                           </div>
                         </v-card-subtitle>
                         <v-card-text @click="() => goToDetail(recipe.id)">
@@ -120,24 +123,13 @@ const addedRecipe = () => {
             </template>
             <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
               <div class="d-flex align-center justify-center pa-4">
-                <v-btn
-                  :disabled="page === 1"
-                  density="comfortable"
-                  icon="mdi-arrow-left"
-                  variant="tonal"
-                  rounded
-                  @click="prevPage"
-                ></v-btn>
+                <v-btn :disabled="page === 1" density="comfortable" icon="mdi-arrow-left" variant="tonal" rounded
+                  @click="prevPage"></v-btn>
                 <div class="mx-2 text-caption">
                   Página {{ page }} de {{ pageCount }}
                 </div>
-                <v-btn
-                  :disabled="page >= pageCount"
-                  density="comfortable"
-                  icon="mdi-arrow-right"
-                  variant="tonal"
-                  rounded @click="nextPage"
-                ></v-btn>
+                <v-btn :disabled="page >= pageCount" density="comfortable" icon="mdi-arrow-right" variant="tonal"
+                  rounded @click="nextPage"></v-btn>
               </div>
             </template>
           </v-data-iterator>

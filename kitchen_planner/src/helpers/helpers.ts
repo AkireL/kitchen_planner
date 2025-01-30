@@ -18,3 +18,17 @@ export function getTodayDate() {
   const [year, month, day] = date.split("-");
   return `${year}-${month}-${day}`;
 }
+
+export function getFirstAndLastDayOfWeek(date) {
+  const firstDay = new Date(date);
+  const lastDay = new Date(date);
+
+  const dayOfWeek = date.getDay();
+  firstDay.setDate(date.getDate() - dayOfWeek);
+  lastDay.setDate(date.getDate() + (6 - dayOfWeek));
+
+  return {
+      firstDay,
+      lastDay
+  };
+}
