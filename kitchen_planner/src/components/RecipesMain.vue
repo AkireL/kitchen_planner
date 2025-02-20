@@ -9,15 +9,11 @@ import {
   VRow,
   VCol,
   VContainer,
-  VAppBar,
-  VNavigationDrawer,
-  VList,
-  VListItem,
-  VMain,
-  VLayout,
   VDialog,
   VCardActions,
 } from 'vuetify/components'
+import HomeView from '@/views/HomeView.vue';
+
 import { useRouter } from 'vue-router'
 import { computed, ref, onMounted, watch } from "vue"
 import { getDayOfDate, getDateByString, getFirstAndLastDayOfWeek, getNextWeek, getPreviousWeek } from "@/helpers/helpers"
@@ -110,82 +106,64 @@ const addedRecipe = () => {
 }
 </script>
 <template>
-  <v-layout class="rounded rounded-md">
-    <v-app-bar title="Recetas de cocina"></v-app-bar>
-    <v-navigation-drawer>
-      <v-list>
-        <v-list-item title="Menu"></v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-      <v-container class="w-100">
-        <v-card>
-          <v-data-iterator :items="recipes" :items-per-page="3">
-            <template v-slot:default="{ items }">
-              <v-container class="pa-2" fluid>
-                <div class="d-flex justify-space-between align-center pb-2">
-                  <v-btn @click="() => addedRecipe()" icon="mdi-plus" size="x-small" color="success"
-                    density="comfortable">
-                  </v-btn>
-                  <div>
-                    <v-btn
-                      @click="getPreviousDate"
-                      icon="mdi-arrow-left"
-                      size="x-small"
-                      ></v-btn>
-                    {{ currentDate.firstDate ? currentDate.firstDate?.toISOString()?.split('T')[0] : "" }} - {{ currentDate.lastDate ? currentDate.lastDate.toISOString()?.split('T')[0] : "" }}
-                    <v-btn
-                      @click="getNextDate"
-                      icon="mdi-arrow-right"
-                      size="x-small"
-                      >
-                    </v-btn>
-                  </div>
-                </div>
-                <v-row dense>
-                  <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
-                    <v-card class="pb-5 overflow-auto" flat style=" max-height: 500px;">
-                      <v-card-title :class="'bg-' + getColor(item.raw.id)">
-                        {{ item.raw.day }} <span class="text-caption">{{ item.raw.date }} </span>
-                      </v-card-title>
-                      <!-- Content or body -->
-                      <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">
-                        <v-card-subtitle class="pt-2">
-                          <div class="d-flex justify-space-between align-center">
-                            <div>
-                              {{ recipe.title }}
-                            </div>
-                            <v-btn @click="() => selectedItemToRemove(recipe)" icon="mdi-delete" size="md" color="red"
-                              variant="text" style="z-index: 1;"></v-btn>
-                          </div>
-                        </v-card-subtitle>
-                        <v-card-text @click="() => goToDetail(recipe.id)">
-                          <div class="text-truncate">
-                            {{ recipe.preparation }}
-                          </div>
-                        </v-card-text>
-                      </v-card>
-                    </v-card>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </template>
-            <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
-              <div class="d-flex align-center justify-center pa-4">
-                <v-btn :disabled="page === 1" density="comfortable" icon="mdi-arrow-left" variant="tonal" rounded
-                  @click="prevPage"></v-btn>
-                <div class="mx-2 text-caption">
-                  Página {{ page }} de {{ pageCount }}
-                </div>
-                <v-btn :disabled="page >= pageCount" density="comfortable" icon="mdi-arrow-right" variant="tonal"
-                  rounded @click="nextPage"></v-btn>
+  <HomeView>
+    <v-card>
+      <v-data-iterator :items="recipes" :items-per-page="3">
+        <template v-slot:default="{ items }">
+          <v-container class="pa-2" fluid>
+            <div class="d-flex justify-space-between align-center pb-2">
+              <v-btn @click="() => addedRecipe()" icon="mdi-plus" size="x-small" color="success" density="comfortable">
+              </v-btn>
+              <div>
+                <v-btn @click="getPreviousDate" icon="mdi-arrow-left" size="x-small"></v-btn>
+                {{ currentDate.firstDate ? currentDate.firstDate?.toISOString()?.split('T')[0] : "" }} - {{
+                  currentDate.lastDate ? currentDate.lastDate.toISOString()?.split('T')[0] : "" }}
+                <v-btn @click="getNextDate" icon="mdi-arrow-right" size="x-small">
+                </v-btn>
               </div>
-            </template>
-          </v-data-iterator>
-        </v-card>
-      </v-container>
-    </v-main>
-  </v-layout>
+            </div>
+            <v-row dense>
+              <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
+                <v-card class="pb-5 overflow-auto" flat style=" max-height: 500px;">
+                  <v-card-title :class="'bg-' + getColor(item.raw.id)">
+                    {{ item.raw.day }} <span class="text-caption">{{ item.raw.date }} </span>
+                  </v-card-title>
+                  <!-- Content or body -->
+                  <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">
+                    <v-card-subtitle class="pt-2">
+                      <div class="d-flex justify-space-between align-center">
+                        <div>
+                          {{ recipe.title }}
+                        </div>
+                        <v-btn @click="() => selectedItemToRemove(recipe)" icon="mdi-delete" size="md" color="red"
+                          variant="text" style="z-index: 1;"></v-btn>
+                      </div>
+                    </v-card-subtitle>
+                    <v-card-text @click="() => goToDetail(recipe.id)">
+                      <div class="text-truncate">
+                        {{ recipe.preparation }}
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </template>
+        <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
+          <div class="d-flex align-center justify-center pa-4">
+            <v-btn :disabled="page === 1" density="comfortable" icon="mdi-arrow-left" variant="tonal" rounded
+              @click="prevPage"></v-btn>
+            <div class="mx-2 text-caption">
+              Página {{ page }} de {{ pageCount }}
+            </div>
+            <v-btn :disabled="page >= pageCount" density="comfortable" icon="mdi-arrow-right" variant="tonal" rounded
+              @click="nextPage"></v-btn>
+          </div>
+        </template>
+      </v-data-iterator>
+    </v-card>
+  </HomeView>
 
   <!-- Modal -->
   <v-dialog v-model="isOpen" width="auto">
