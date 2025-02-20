@@ -18,7 +18,7 @@ import {
 import { ref } from "vue"
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useRecipes } from "@/composables/store"
+import { useRecipeStore } from "@/composables/recipeStore"
 import { getTodayDate } from "@/helpers/helpers"
 import type { Recipe } from '@/types';
 import Ingredients from "@/components/Ingredients.vue"
@@ -27,7 +27,7 @@ const props = defineProps<{
   id?: string | null,
 }>();
 
-const store = useRecipes();
+const store = useRecipeStore();
 const router = useRouter();
 
 const recipe = ref<Recipe>({

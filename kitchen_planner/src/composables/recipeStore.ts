@@ -4,7 +4,7 @@ import { recipesList as data } from '@/__fixture__/MockRecipes'
 import type { Recipe } from '@/types'
 import { v4 as uuid } from 'uuid';
 
-export const useRecipes = defineStore('search-filters', () => {
+export const useRecipeStore = defineStore('search-filters', () => {
   const recipesList = ref<Recipe[]>([])
 
   const retrieveRecipes = (startDate:Date | null = null, endDate:Date | null = null) => {

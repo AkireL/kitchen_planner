@@ -21,13 +21,13 @@ import {
 import { useRouter } from 'vue-router'
 import { computed, ref, onMounted, watch } from "vue"
 import { getDayOfDate, getDateByString, getFirstAndLastDayOfWeek, getNextWeek, getPreviousWeek } from "@/helpers/helpers"
-import { useRecipes } from "@/composables/store"
+import { useRecipeStore } from "@/composables/recipeStore"
 import { initData } from "@/helpers/days"
 import { getColor } from "@/helpers/color"
 import type { Recipe, RangeDate } from '@/types'
 
 const router = useRouter();
-const store = useRecipes();
+const store = useRecipeStore();
 
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
