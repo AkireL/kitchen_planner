@@ -5,9 +5,15 @@ import type { Recipe } from '@/types'
 import { v4 as uuid } from 'uuid';
 
 export const useRecipes = defineStore('search-filters', () => {
-  const recipesList = ref<Recipe[]>(data)
+  const recipesList = ref<Recipe[]>([])
 
-  const getById = (id: number) => {
+  const retrieveRecipes = (startDate:Date | null = null, endDate:Date | null = null) => {
+
+    recipesList.value = data
+    return data;
+  }
+
+  const getById = (id: number | string) => {
     const recipeTmp = recipesList.value.filter((item) => {
       return item.id == id
     })
@@ -24,6 +30,7 @@ export const useRecipes = defineStore('search-filters', () => {
       const [year, month, day] = date.split('-')
       const formattedDate = `${year}-${month}-${day}`
       recipeTmp[0].schedule_at = formattedDate
+
       return recipeTmp[0]
     }
   }
@@ -33,14 +40,13 @@ export const useRecipes = defineStore('search-filters', () => {
       return item.id == data.id
     })
 
-    if (index) {
+    if (index> -1) {
       recipesList.value[index] = data
       // TODO: update data in database
     }
   }
 
-  const removeRecipe = (id: number) => {
-    // TODO: remove data in database
+  const removeRecipe = (id: number | string) => {
     recipesList.value = recipesList.value.filter((item) => {
       return item.id != id
     });
@@ -54,6 +60,7 @@ export const useRecipes = defineStore('search-filters', () => {
 
   return {
     recipesList,
+    retrieveRecipes,
     getById,
     addRecipe,
     updateRecipe,

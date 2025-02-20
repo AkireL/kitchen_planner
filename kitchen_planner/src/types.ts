@@ -13,3 +13,8 @@ export interface Recipes {
   date: string | null
   list: Recipe[]
 }
+
+export interface RangeDate {
+  firstDate: Date | null
+  lastDate: Date | null
+}

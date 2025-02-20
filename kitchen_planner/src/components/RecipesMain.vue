@@ -19,24 +19,35 @@ import {
   VCardActions,
 } from 'vuetify/components'
 import { useRouter } from 'vue-router'
-import { computed, ref, onMounted } from "vue"
-import { getDayOfDate, getDateByString, getFirstAndLastDayOfWeek } from "@/helpers/helpers"
+import { computed, ref, onMounted, watch } from "vue"
+import { getDayOfDate, getDateByString, getFirstAndLastDayOfWeek, getNextWeek, getPreviousWeek } from "@/helpers/helpers"
 import { useRecipes } from "@/composables/store"
 import { initData } from "@/helpers/days"
 import { getColor } from "@/helpers/color"
+import type { Recipe, RangeDate } from '@/types'
 
 const router = useRouter();
 const store = useRecipes();
 
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
-const selectedDate = ref({firstDate: "", lastDate: ""});
+const selectedDate = ref<RangeDate>({ firstDate: null, lastDate: null });
+const currentDate = ref<RangeDate>({ firstDate: null, lastDate: null });
 
 onMounted(() => {
-  const {firstDay, lastDay} = getFirstAndLastDayOfWeek(new Date());
+  const { firstDay, lastDay } = getFirstAndLastDayOfWeek(new Date());
   selectedDate.value.firstDate = firstDay;
   selectedDate.value.lastDate = lastDay;
-})
+
+  currentDate.value.firstDate = firstDay;
+  currentDate.value.lastDate = lastDay;
+
+  store.retrieveRecipes(currentDate.value.firstDate, currentDate.value.lastDate);
+});
+
+watch((currentDate), async () => {
+  store.retrieveRecipes(currentDate.value.firstDate, currentDate.value.lastDate);
+}, { deep: true });
 
 const recipes = computed(() => {
   const newData = initData();
@@ -54,6 +65,27 @@ const recipes = computed(() => {
   return newData;
 });
 
+const getNextDate = () => {
+  if (!currentDate.value.firstDate) {
+    return;
+  }
+
+  const date = getNextWeek(currentDate.value.firstDate)
+
+  currentDate.value.firstDate = date.start
+  currentDate.value.lastDate = date.end
+}
+
+const getPreviousDate = () => {
+  if (!currentDate.value.firstDate) {
+    return;
+  }
+
+  const date = getPreviousWeek(currentDate.value.firstDate)
+  currentDate.value.firstDate = date.start
+  currentDate.value.lastDate = date.end
+}
+
 const goToDetail = (id: number) => {
   router.push({ name: 'recipeForm', params: { id: id } });
 }
@@ -64,6 +96,10 @@ const selectedItemToRemove = (recipe: Recipe) => {
 }
 
 const removeRecipe = () => {
+  if (!recipeSelected.value) {
+    return;
+  }
+
   store.removeRecipe(recipeSelected.value.id);
   isOpen.value = false;
   recipeSelected.value = null;
@@ -91,7 +127,20 @@ const addedRecipe = () => {
                   <v-btn @click="() => addedRecipe()" icon="mdi-plus" size="x-small" color="success"
                     density="comfortable">
                   </v-btn>
-                  <div>{{ selectedDate.firstDate != ""? selectedDate.firstDate.toISOString()?.split('T')[0] : "" }} - {{ selectedDate.lastDate != ""? selectedDate.lastDate.toISOString()?.split('T')[0] : "" }}</div>
+                  <div>
+                    <v-btn
+                      @click="getPreviousDate"
+                      icon="mdi-arrow-left"
+                      size="x-small"
+                      ></v-btn>
+                    {{ currentDate.firstDate ? currentDate.firstDate?.toISOString()?.split('T')[0] : "" }} - {{ currentDate.lastDate ? currentDate.lastDate.toISOString()?.split('T')[0] : "" }}
+                    <v-btn
+                      @click="getNextDate"
+                      icon="mdi-arrow-right"
+                      size="x-small"
+                      >
+                    </v-btn>
+                  </div>
                 </div>
                 <v-row dense>
                   <v-col v-for="item in items" :key="item.title" cols="auto" md="4">

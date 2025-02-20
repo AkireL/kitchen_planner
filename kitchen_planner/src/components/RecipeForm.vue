@@ -33,7 +33,7 @@ const router = useRouter();
 const recipe = ref<Recipe>({
   id: 0,
   title: "",
-  description: "",
+  duration: "",
   schedule_at: getTodayDate(),
   ingredients: [],
   preparation: "",
@@ -41,15 +41,15 @@ const recipe = ref<Recipe>({
 
 onMounted(() => {
   if (props.id) {
-    recipe.value = {...store.getById(props.id)}
+    recipe.value = {...store.getById(props.id)} as Recipe
   }
 });
 
-const rules = (value) => !!value || "Este campo es obligatorio";
+const rules = (value: string | number | Date) => !!value || "Este campo es obligatorio";
 
 const loading = ref<boolean>(false);
 
-const submit = async (event) => {
+const submit = async (event: Event) => {
   if (!recipe.value.title || !recipe.value.schedule_at) {
     return 0;
   }
