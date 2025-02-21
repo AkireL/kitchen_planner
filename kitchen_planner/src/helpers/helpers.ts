@@ -1,3 +1,5 @@
+import { initData } from '@/helpers/days';
+
 export function getDayOfDate(date: string) {
   const [year, month, day] = date.split('-');
   const formattedDate = `${year}-${month}-${day}`;
@@ -74,4 +76,33 @@ export function getPreviousWeek(startDate: Date) {
     start: previousMonday,
     end: previousSunday,
   };
+}
+
+export function getWeekDays(startDate: Date, endDate: Date) {
+  const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) {
+    throw new Error('Fechas inválidas o fuera de rango');
+  }
+
+  let result = [];
+
+  while (start <= end) {
+    result.push({
+      id: start.getDay() == 0 ? 7 : start.getDay(),
+      day: daysOfWeek[start.getDay()],
+      date: start.toISOString().split('T')[0],
+      list: [],
+    });
+
+    start.setDate(start.getDate() + 1);
+  }
+
+  if (!result.length) {
+    result = initData();
+  }
+
+  return result;
 }

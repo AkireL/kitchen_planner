@@ -1,46 +1,46 @@
-import type { Recipes } from '@/types'
+import type { Recipes } from '@/types';
 
 export const initData = (): Recipes[] => [
   {
     id: 1,
     day: 'Lunes',
     list: [],
-    date: null
+    date: null,
   },
   {
     id: 2,
     day: 'Martes',
     list: [],
-    date: null
+    date: null,
   },
   {
     id: 3,
     day: 'Miércoles',
     list: [],
-    date: null
+    date: null,
   },
   {
     id: 4,
     day: 'Jueves',
     list: [],
-    date: null
+    date: null,
   },
   {
     id: 5,
     day: 'Viernes',
     list: [],
-    date: null
+    date: null,
   },
   {
     id: 6,
     day: 'Sábado',
     list: [],
-    date: null
+    date: null,
   },
   {
-    id: 0,
+    id: 7,
     day: 'Domingo',
     list: [],
-    date: null
+    date: null,
   },
-]
+];

@@ -7,7 +7,8 @@ export const getColor = (index: number) => {
     'blue-darken-2',
     'indigo-darken-1',
     'deep-purple-lighten-1',
-  ]
+    'deep-purple-lighten-3',
+  ];
 
-  return colors[index]
-}
+  return colors[index];
+};
