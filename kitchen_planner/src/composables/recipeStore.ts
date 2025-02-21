@@ -1,16 +1,29 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { recipesList as data } from '@/__fixture__/MockRecipes'
-import type { Recipe } from '@/types'
+import type { Recipe } from '@/types';
 import { v4 as uuid } from 'uuid';
+import { createRecipesService, deleteRecipesService, retrieveRecipesService, updateRecipesService } from '@/services/kitchen_api_service'
+import { formatDate } from '@/helpers/helpers';
 
 export const useRecipeStore = defineStore('search-filters', () => {
   const recipesList = ref<Recipe[]>([])
 
   const retrieveRecipes = (startDate:Date | null = null, endDate:Date | null = null) => {
 
-    recipesList.value = data
-    return data;
+    const filters = {};
+    if (startDate != null && endDate != null) {
+        filters['start_date'] = formatDate(startDate);
+        filters['end_date'] = formatDate(endDate);
+    }
+
+    retrieveRecipesService(filters)
+      .then(function ({data}) {
+        recipesList.value= data.data;
+      })
+      .catch(() => {
+        recipesList.value= [];
+      });
   }
 
   const getById = (id: number | string) => {
@@ -42,7 +55,14 @@ export const useRecipeStore = defineStore('search-filters', () => {
 
     if (index> -1) {
       recipesList.value[index] = data
-      // TODO: update data in database
+
+      updateRecipesService(data.id, data)
+        .then(function(response){
+          console.log("UPDATE", response);
+        })
+        .catch(function(error){
+          console.log(error);
+        });
     }
   }
 
@@ -50,12 +70,33 @@ export const useRecipeStore = defineStore('search-filters', () => {
     recipesList.value = recipesList.value.filter((item) => {
       return item.id != id
     });
+
+    deleteRecipesService(id)
+      .then(function(data){
+        console.log("DELETE", data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   const addRecipe =  (newItem: Recipe) => {
       newItem.id = uuid();
       recipesList.value.push(newItem);
-      // TODO: store in database
+
+      let item = {...newItem};
+
+      if(newItem.preparation.length <=0) {
+        delete item["preparation"];
+      }
+
+      createRecipesService(item)
+        .then(function(response) {
+          console.log("ADD RECIPE", response)
+        })
+        .catch(function (error){
+          console.log(error);
+        });
   }
 
   return {
