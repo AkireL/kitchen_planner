@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { recipesList as data } from '@/__fixture__/MockRecipes'
 import type { Recipe } from '@/types';
 import { v4 as uuid } from 'uuid';
-import { createRecipesService, deleteRecipesService, retrieveRecipesService, updateRecipesService } from '@/services/kitchen_api/recipe_service'
+import { createRecipesService, deleteRecipesService, retrieveRecipesService, updateRecipesService } from '@/services/kitchen_api/recipeService'
 import { formatDate } from '@/helpers/helpers';
 
 export const useRecipeStore = defineStore('search-filters', () => {
