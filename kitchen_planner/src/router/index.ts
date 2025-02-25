@@ -5,6 +5,7 @@ import { useUserStore } from '@/composables/userStore';
 import { storeToRefs } from 'pinia';
 import LogInView from '@/views/LogInVew.vue';
 import SignInView from '@/views/SignInView.vue';
+import NotFoundView from '@/views/NotFoundView.vue';
 import PresentationView from '@/views/PresentationView.vue';
 
 const router = createRouter({
@@ -15,32 +16,32 @@ const router = createRouter({
       name: 'home',
       component: PresentationView,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+      },
     },
     {
       path: '/logIn',
       name: 'logIn',
       component: LogInView,
       meta: {
-        requiresAuth: false
-      }
+        requiresAuth: false,
+      },
     },
     {
       path: '/signIn',
       name: 'signIn',
       component: SignInView,
       meta: {
-        requiresAuth: false
-      }
+        requiresAuth: false,
+      },
     },
     {
       path: '/recipes',
       name: 'homeRecipe',
       component: RecipesMain,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+      },
     },
     {
       path: '/recipe/:id?',
@@ -48,28 +49,19 @@ const router = createRouter({
       props: true,
       component: RecipeForm,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+      },
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'notFound',
-      beforeEnter: (to, from, next) => {
-        const userStore = useUserStore();
-        const { isAuthenticated } = storeToRefs(userStore);
-
-        if (isAuthenticated.value) {
-          next('/');
-        } else {
-          next('/signIn');
-        }
-      }
-    }
+      component: NotFoundView,
+    },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  const userStore = useUserStore()
+  const userStore = useUserStore();
   const { isAuthenticated } = storeToRefs(userStore);
 
   if (to.meta.requiresAuth && !isAuthenticated.value) {
@@ -77,6 +69,6 @@ router.beforeEach((to, from, next) => {
     return;
   }
   next();
-})
+});
 
 export default router;
