@@ -84,7 +84,7 @@ export const useRecipeStore = defineStore('search-filters', () => {
       newItem.id = uuid();
       recipesList.value.push(newItem);
 
-      let item = {...newItem};
+      const item = {...newItem};
 
       if(newItem.preparation.length <=0) {
         delete item["preparation"];
