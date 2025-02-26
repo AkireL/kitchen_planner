@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { recipesList as data } from '@/__fixture__/MockRecipes'
-import type { Recipe } from '@/types';
+import type { Recipe, RecipeFiltersParams } from '@/types';
 import { v4 as uuid } from 'uuid';
 import { createRecipesService, deleteRecipesService, retrieveRecipesService, updateRecipesService } from '@/services/kitchen_api/recipeService'
 import { formatDate } from '@/helpers/helpers';
@@ -10,8 +9,11 @@ export const useRecipeStore = defineStore('search-filters', () => {
   const recipesList = ref<Recipe[]>([])
 
   const retrieveRecipes = (startDate:Date | null = null, endDate:Date | null = null) => {
+    const filters: RecipeFiltersParams = {
+      "start_date": "",
+      "end_date": ""
+    };
 
-    const filters = {};
     if (startDate != null && endDate != null) {
         filters['start_date'] = formatDate(startDate);
         filters['end_date'] = formatDate(endDate);
@@ -86,7 +88,7 @@ export const useRecipeStore = defineStore('search-filters', () => {
 
       const item = {...newItem};
 
-      if(newItem.preparation.length <=0) {
+      if(! newItem.preparation || newItem.preparation.length <=0) {
         delete item["preparation"];
       }
 
