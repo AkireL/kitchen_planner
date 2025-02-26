@@ -11,7 +11,7 @@ const model = defineModel({
   required: true,
 });
 
-const removeIngredient = (index) => {
+const removeIngredient = (index: string | number) => {
   model.value = model.value.filter((item, i) => index != i);
 }
 </script>

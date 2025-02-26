@@ -2,7 +2,7 @@ export interface Recipe {
   id: number | string;
   title: string | null;
   ingredients: string[];
-  preparation: string;
+  preparation?: string;
   duration: string;
   schedule_at: string;
 }
@@ -22,4 +22,11 @@ export interface RangeDate {
 export interface RecipeFiltersParams {
   start_date: string;
   end_date: string;
+}
+
+export interface AuthInterface {
+  id?: string;
+  email?: string;
+  username?: string;
+  full_name?: string;
 }
