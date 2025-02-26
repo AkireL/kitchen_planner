@@ -13,7 +13,8 @@ import {
   VMenu,
   VAvatar,
   VListItemTitle,
-  VIcon
+  VIcon,
+  VCard,
 } from 'vuetify/components';
 
 const store = useUserStore();
