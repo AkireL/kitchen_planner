@@ -24,6 +24,13 @@ export const useUserStore = defineStore('user-session', () => {
     return true;
   }
 
+  function singUp() {
+    token.value = null;
+    user.value = null;
+    localStorage.removeItem('kitchen');
+    localStorage.removeItem('kitchen_user');
+  }
+
   function getToken() {
     return token.value;
   }
@@ -48,5 +55,6 @@ export const useUserStore = defineStore('user-session', () => {
     isAuthenticated,
     setUser,
     getUser,
+    singUp,
   };
 });
