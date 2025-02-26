@@ -12,12 +12,12 @@ const model = defineModel({
 });
 
 const removeIngredient = (index: string | number) => {
-  model.value = model.value.filter((item, i) => index != i);
+  model.value = model.value.filter((_, i) => index != i);
 }
 </script>
 <template>
   <v-list style="width: 50%" class="p-0">
-    <v-list-item v-for="(ingredient, index) in model" :key="index" class="p-0 m-0">
+    <v-list-item v-for="(_, index) in model" :key="index" class="p-0 m-0">
       <div class="d-flex ga-1">
         <v-text-field
           v-model="model[index]"
