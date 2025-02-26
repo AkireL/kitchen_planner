@@ -83,9 +83,6 @@ export const useRecipeStore = defineStore('search-filters', () => {
   }
 
   const addRecipe =  (newItem: Recipe) => {
-      newItem.id = uuid();
-      recipesList.value.push(newItem);
-
       const item = {...newItem};
 
       if(! newItem.preparation || newItem.preparation.length <=0) {
@@ -93,8 +90,8 @@ export const useRecipeStore = defineStore('search-filters', () => {
       }
 
       createRecipesService(item)
-        .then(function(response) {
-          console.log("ADD RECIPE", response)
+        .then(function({data}) {
+          recipesList.value.push(data);
         })
         .catch(function (error){
           console.log(error);
