@@ -9,7 +9,7 @@ import {
   VRow,
   VCol,
 } from 'vuetify/components';
-import HomeView from '@/views/HomeView.vue';
+import HomeView from '@/views/MainLayout.vue';
 
 import { ref } from 'vue';
 import { onMounted } from 'vue';

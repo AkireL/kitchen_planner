@@ -12,7 +12,7 @@ import {
   VDialog,
   VCardActions,
 } from 'vuetify/components';
-import HomeView from '@/views/HomeView.vue';
+import HomeView from '@/views/MainLayout.vue';
 
 import { useRouter } from 'vue-router';
 import { computed, ref, onMounted, watch } from 'vue';
