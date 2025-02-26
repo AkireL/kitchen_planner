@@ -45,7 +45,7 @@ const rules = (value: string | number | Date) => !!value || 'Este campo es oblig
 
 const loading = ref<boolean>(false);
 
-const submit = async (event: Event) => {
+const submit = async () => {
   if (!recipe.value.title || !recipe.value.schedule_at) {
     return 0;
   }
@@ -56,9 +56,10 @@ const submit = async (event: Event) => {
     store.updateRecipe(recipe.value);
     loading.value = false;
     router.push({ name: 'homeRecipe' });
+
     return;
   }
-  await event;
+
   store.addRecipe(recipe.value);
   loading.value = false;
   router.push({ name: 'homeRecipe' });
