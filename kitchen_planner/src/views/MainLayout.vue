@@ -3,7 +3,6 @@ import { useUserStore } from '@/composables/userStore';
 import { useRouter } from 'vue-router';
 import {
   VAppBar,
-  VNavigationDrawer,
   VList,
   VListItem,
   VMain,
@@ -62,11 +61,6 @@ function signUp() {
         </v-card>
       </v-menu>
     </v-app-bar>
-    <v-navigation-drawer>
-      <v-list>
-        <v-list-item title="Menu"></v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-main class="d-flex align-center justify-center" style="min-height: 300px">
       <v-container class="w-100">
         <slot />
