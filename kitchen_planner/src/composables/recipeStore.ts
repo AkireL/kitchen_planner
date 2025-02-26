@@ -52,15 +52,13 @@ export const useRecipeStore = defineStore('search-filters', () => {
 
   const updateRecipe = (data: Recipe) => {
     const index = recipesList.value.findIndex((item) => {
-      return item.id == data.id
-    })
+      return item.id == data.id;
+    });
 
     if (index> -1) {
-      recipesList.value[index] = data
-
       updateRecipesService(data.id, data)
-        .then(function(response){
-          console.log("UPDATE", response);
+      .then(function(){
+          recipesList.value[index] = data;
         })
         .catch(function(error){
           console.log(error);
