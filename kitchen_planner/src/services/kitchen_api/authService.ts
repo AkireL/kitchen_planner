@@ -1,20 +1,5 @@
-import axios from 'axios';
 import { KITCHEN_API_URL } from '@/config';
-import { useUserStore } from '@/composables/userStore';
-
-function initInstance() {
-  const userStore = useUserStore();
-
-  const headers = {
-    Authorization: 'Bearer ' + userStore.getToken(),
-  };
-
-  return axios.create({
-    baseURL: KITCHEN_API_URL,
-    timeout: 1000,
-    headers: headers,
-  });
-}
+import { initInstance } from './client';
 
 export function signIn(data: object = {}) {
   return initInstance()({
@@ -26,9 +11,9 @@ export function signIn(data: object = {}) {
 
 export function logIn(data: object = {}) {
   return initInstance()({
+    method: 'post',
     url: KITCHEN_API_URL + '/token/' ,
     data: data,
-    method: 'post'
   });
 }
 
