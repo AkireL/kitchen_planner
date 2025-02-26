@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/composables/userStore';
-import { storeToRefs } from 'pinia';
 import { onMounted } from 'vue';
 
 const router = useRouter();
 const userStore = useUserStore();
-const { isAuthenticated } = storeToRefs(userStore);
 
 onMounted(() => {
   setTimeout(() => {
-    router.push(isAuthenticated.value ? '/' : '/signIn');
+    router.push(userStore.isAuthenticated() ? '/' : '/signIn');
   }, 2000);
 });
 </script>

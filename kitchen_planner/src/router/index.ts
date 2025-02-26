@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import RecipesMain from '@/components/RecipesMain.vue';
 import RecipeForm from '@/components/RecipeForm.vue';
 import { useUserStore } from '@/composables/userStore';
-import { storeToRefs } from 'pinia';
 import LogInView from '@/views/LogInVew.vue';
 import SignInView from '@/views/SignInView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
@@ -62,9 +61,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
-  const { isAuthenticated } = storeToRefs(userStore);
 
-  if (to.meta.requiresAuth && !isAuthenticated.value) {
+  if (to.meta.requiresAuth && !userStore.isAuthenticated()) {
     next('/signIn');
     return;
   }

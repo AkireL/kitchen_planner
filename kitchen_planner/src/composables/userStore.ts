@@ -1,22 +1,41 @@
+import type { AuthInterface } from '@/types';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useUserStore = defineStore('user-session', () => {
-  const token = ref<string>();
-  const isAuthenticated = ref<boolean>(false);
-  const user = ref(null);
+  const token = ref<string | null>(null);
+  const user = ref<AuthInterface | null>(null);
+
+  function isAuthenticated() {
+    if (token.value && token.value.length > 0) {
+      return true;
+    }
+
+    const currentToken = localStorage.getItem('kitchen');
+    const currentUser = localStorage.getItem('kitchen_user') || '{}';
+
+    if (!currentToken || !currentUser) {
+      return false;
+    }
+
+    token.value = currentToken;
+    user.value = JSON.parse(currentUser);
+
+    return true;
+  }
 
   function getToken() {
     return token.value;
   }
 
   function setToken(jwt: string) {
+    localStorage.setItem('kitchen', jwt);
     token.value = jwt;
   }
 
-  function setUser(value) {
+  function setUser(value: AuthInterface) {
     user.value = value;
-    isAuthenticated.value = true;
+    localStorage.setItem('kitchen_user', JSON.stringify(value));
   }
 
   function getUser() {
