@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Recipe, RecipeFiltersParams } from '@/types';
-import { v4 as uuid } from 'uuid';
 import { createRecipesService, deleteRecipesService, retrieveRecipesService, updateRecipesService } from '@/services/kitchen_api/recipeService'
 import { formatDate } from '@/helpers/helpers';
 
