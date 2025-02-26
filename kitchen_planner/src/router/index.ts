@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import RecipesMain from '@/components/RecipesMain.vue';
 import RecipeForm from '@/components/RecipeForm.vue';
 import { useUserStore } from '@/composables/userStore';
-import LogInView from '@/views/LogInVew.vue';
+import LogInView from '@/views/LogInView.vue';
 import SignInView from '@/views/SignInView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
 import PresentationView from '@/views/PresentationView.vue';
