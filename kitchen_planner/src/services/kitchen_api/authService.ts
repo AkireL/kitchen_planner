@@ -1,5 +1,5 @@
 import { KITCHEN_API_URL } from '@/config';
-import { initInstance } from './client';
+import { initInstance, initInstanceWithOutBearer } from './client';
 
 export function signIn(data: object = {}) {
   return initInstance()({
@@ -10,11 +10,9 @@ export function signIn(data: object = {}) {
 }
 
 export function logIn(data: object = {}) {
-  return initInstance()({
-    method: 'post',
-    url: KITCHEN_API_URL + '/token/' ,
-    data: data,
-  });
+  return initInstanceWithOutBearer().post(
+    KITCHEN_API_URL + '/token',data,
+  );
 }
 
 export function getCurrentUser() {

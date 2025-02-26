@@ -27,6 +27,10 @@ function submit()
   const data = {
     "password": password.value,
     "username": userName.value,
+    "grant_type": "password",
+    "scope": "",
+    "client_id": "",
+    "client_secret": "",
   }
 
   logIn(data)

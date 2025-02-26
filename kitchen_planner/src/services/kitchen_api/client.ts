@@ -15,3 +15,14 @@ export function initInstance() {
     headers: headers,
   });
 }
+
+export function initInstanceWithOutBearer() {
+  return axios.create({
+    baseURL: KITCHEN_API_URL,
+    timeout: 1000,
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  });
+}
