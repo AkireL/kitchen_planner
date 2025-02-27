@@ -11,6 +11,7 @@ import {
   VContainer,
   VDialog,
   VCardActions,
+  VIcon,
 } from 'vuetify/components';
 import HomeView from '@/views/MainLayout.vue';
 
@@ -24,7 +25,6 @@ import {
   getPreviousWeek,
 } from '@/helpers/helpers';
 import { useRecipeStore } from '@/composables/recipeStore';
-import { getColor } from '@/helpers/color';
 import { getWeekDays } from '@/helpers/helpers';
 import type { Recipe, RangeDate } from '@/types';
 
@@ -96,7 +96,7 @@ const getPreviousDate = () => {
   currentDate.value.lastDate = date.end;
 };
 
-const goToDetail = (id: number) => {
+const goToDetail = (id: number | string) => {
   router.push({ name: 'recipeForm', params: { id: id } });
 };
 
@@ -145,11 +145,22 @@ const addedRecipe = () => {
               </div>
             </div>
             <v-row dense>
-              <v-col v-for="item in items" :key="item.title" cols="auto" md="4">
+              <v-col v-for="item in items" :key="item.raw.id" cols="auto" md="4">
                 <v-card class="pb-5 overflow-auto" flat style="max-height: 500px">
-                  <v-card-title :class="'bg-' + getColor(item.raw.id)">
+                  <v-card-title :class="'day-' + item.raw.id">
                     {{ item.raw.day }} <span class="text-caption">{{ item.raw.date }} </span>
                   </v-card-title>
+                  <!-- When there are not recipes -->
+                  <v-card v-if="item.raw.list.length === 0">
+                    <v-card-text class="p-0">
+                      <v-row align="center" no-gutters>
+                        <v-col class="" cols="6">Hoy no tienes recetas</v-col>
+                        <v-col class="text-right" cols="6">
+                          <v-icon color="warning" icon="mdi-food-off" size="40"></v-icon>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
                   <!-- Content or body -->
                   <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">
                     <v-card-subtitle class="pt-2">
@@ -228,5 +239,59 @@ const addedRecipe = () => {
 .v-card:has(> .v-card-text:hover) {
   background-color: #e0e0e0;
   cursor: pointer;
+}
+
+.day-1 {
+  background: linear-gradient(135deg, rgba(255, 105, 180, 0.8), rgba(138, 43, 226, 0.8));
+  background-size: 400% 400%;
+  animation: gradientAnimation 10s ease infinite;
+}
+
+.day-2 {
+  background: linear-gradient(45deg, rgba(0, 191, 255, 0.8), rgba(255, 99, 71, 0.8));
+  background-size: 400% 400%;
+  animation: gradientAnimation 8s ease infinite;
+}
+
+.day-3 {
+  background: linear-gradient(60deg, rgba(34, 193, 195, 0.8), rgba(253, 187, 45, 0.8));
+  background-size: 400% 400%;
+  animation: gradientAnimation 12s ease infinite;
+}
+
+.day-4 {
+  background: linear-gradient(120deg, rgba(255, 215, 0, 0.8), rgba(255, 69, 0, 0.8));
+  background-size: 400% 400%;
+  animation: gradientAnimation 9s ease infinite;
+}
+
+.day-5 {
+  background: linear-gradient(90deg, rgba(255, 0, 255, 0.8), rgba(0, 255, 255, 0.8));
+  background-size: 400% 400%;
+  animation: gradientAnimation 6s ease infinite;
+}
+
+.day-6 {
+  background: linear-gradient(135deg, rgba(144, 238, 144, 0.8), rgba(255, 69, 0, 0.8));
+  background-size: 400% 400%;
+  animation: gradientAnimation 11s ease infinite;
+}
+
+.day-7 {
+  background: linear-gradient(180deg, rgba(255, 165, 0, 0.8), rgba(255, 20, 147, 0.8));
+  background-size: 400% 400%;
+  animation: gradientAnimation 7s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 </style>
