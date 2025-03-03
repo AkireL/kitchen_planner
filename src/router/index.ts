@@ -63,9 +63,16 @@ router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
 
   if (to.meta.requiresAuth && !userStore.isAuthenticated()) {
+    localStorage.setItem('lastVisitedRoute', to.fullPath);
     next('/signIn');
     return;
   }
+  if (userStore.isAuthenticated() && ['/logIn', '/signIn'].includes(to.path)) {
+    const lastRoute = localStorage.getItem('lastVisitedRoute') || '/';
+    next(lastRoute);
+    return;
+  }
+
   next();
 });
 
