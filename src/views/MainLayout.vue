@@ -19,8 +19,8 @@ import {
 const store = useUserStore();
 const router = useRouter();
 
-function logOut() {
-  store.logOut();
+function logout() {
+  store.logout();
   router.push({ name: 'logIn' });
 }
 </script>
@@ -46,7 +46,7 @@ function logOut() {
           <v-list density="compact">
             <v-list-item>
               <v-list-item-title>
-                <v-btn color="primary" @click="logOut">
+                <v-btn color="primary" @click="logout">
                   Log Out
                 </v-btn>
               </v-list-item-title>
