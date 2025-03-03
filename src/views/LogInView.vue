@@ -11,6 +11,7 @@ import {
   VCardTitle,
   VLayout,
   VDivider,
+  VContainer,
 } from 'vuetify/components';
 import { useRouter } from 'vue-router';
 import type { logInInterface } from '@/types';
@@ -62,8 +63,10 @@ function submit(data: logInInterface) {
         <v-form validate-on="submit lazy" @submit.prevent="submit(form)">
           <v-sheet class="mx-auto" max-width="300">
             <v-card-title>Log In</v-card-title>
-            <v-text-field v-model="form.username" :rules="[rules]" label="User name"></v-text-field>
-            <v-text-field v-model="form.password" :rules="[rules]" label="Password" :type="'password'"></v-text-field>
+            <v-text-field v-model="form.username" :rules="[rules]" label="User name" name="username"
+              id="username"></v-text-field>
+            <v-text-field v-model="form.password" :rules="[rules]" label="Password" name="password" id="password"
+              :type="'password'"></v-text-field>
 
             <v-btn :loading="loading" class="mt-2 mb-5" color="primary" text="Submit" type="submit" block></v-btn>
           </v-sheet>
