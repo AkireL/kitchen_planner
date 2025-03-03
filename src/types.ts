@@ -30,3 +30,19 @@ export interface AuthInterface {
   username?: string;
   full_name?: string;
 }
+
+export interface userInterface {
+  username: string;
+  email: string;
+  fullName: string;
+  password: string;
+}
+
+export interface logInInterface {
+  username: string;
+  password: string;
+  scope: string;
+  client_id: string;
+  grant_type: string;
+  client_secret: string;
+}

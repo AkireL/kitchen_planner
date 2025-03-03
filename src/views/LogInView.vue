@@ -13,26 +13,26 @@ import {
   VDivider,
 } from 'vuetify/components';
 import { useRouter } from 'vue-router';
+import type { logInInterface } from '@/types';
 
 const loading = ref<boolean>(false);
-const userName = ref<string>('');
-const password = ref<string>('');
+
+const form = ref<logInInterface>({
+  username: '',
+  password: '',
+  scope: '',
+  grant_type: 'password',
+  client_id: '',
+  client_secret: '',
+});
 
 const store = useUserStore();
 const router = useRouter();
 
 const rules = (value: string | number | Date) => !!value || 'Este campo es obligatorio';
 
-function submit() {
-  const data = {
-    password: password.value,
-    username: userName.value,
-    grant_type: 'password',
-    scope: '',
-    client_id: '',
-    client_secret: '',
-  };
-
+function submit(data: logInInterface) {
+  loading.value = true;
   logIn(data)
     .then(({ data }) => {
       store.setToken(data.access_token);
@@ -50,35 +50,29 @@ function submit() {
     .catch((e) => {
       console.log('Error LogIn');
       console.log(e);
-    });
+      loading.value = true;
+    })
+    .finally(() => (loading.value = false));
 }
 </script>
 <template>
   <v-layout class="rounded rounded-md mt-5">
     <v-container class="w-100">
       <v-card class="mx-auto" max-width="344">
-        <v-form validate-on="submit lazy" @submit.prevent="submit">
+        <v-form validate-on="submit lazy" @submit.prevent="submit(form)">
           <v-sheet class="mx-auto" max-width="300">
-            <v-card-title>LogIn</v-card-title>
-            <v-text-field v-model="userName" :rules="[rules]" label="User name"></v-text-field>
-            <v-text-field v-model="password" :rules="[rules]" label="Password"></v-text-field>
+            <v-card-title>Log In</v-card-title>
+            <v-text-field v-model="form.username" :rules="[rules]" label="User name"></v-text-field>
+            <v-text-field v-model="form.password" :rules="[rules]" label="Password" :type="'password'"></v-text-field>
 
-            <v-btn
-              :loading="loading"
-              class="mt-2 mb-5"
-              color="primary"
-              text="Submit"
-              type="submit"
-              block
-            ></v-btn>
+            <v-btn :loading="loading" class="mt-2 mb-5" color="primary" text="Submit" type="submit" block></v-btn>
           </v-sheet>
         </v-form>
         <v-divider></v-divider>
         <div class="ml-5 mt-5">
           New to Kitchen planner?
-          <v-btn @click="() => $router.push({ name: 'signIn' })" class="mb-5" variant="plain"
-            >Create an account</v-btn
-          >
+          <v-btn @click="() => $router.push({ name: 'signIn' })" class="mb-5" variant="plain" :loading="loading">Create
+            an account</v-btn>
         </div>
       </v-card>
     </v-container>

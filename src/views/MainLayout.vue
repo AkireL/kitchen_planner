@@ -19,8 +19,8 @@ import {
 const store = useUserStore();
 const router = useRouter();
 
-function signUp() {
-  store.singUp();
+function logOut() {
+  store.logOut();
   router.push({ name: 'logIn' });
 }
 </script>
@@ -29,10 +29,7 @@ function signUp() {
   <v-layout class="rounded rounded-md">
     <v-app-bar title="Recetas de cocina">
       <v-list>
-        <v-list-item
-          :subtitle="store.getUser()?.email"
-          :title="store.getUser()?.username"
-        >
+        <v-list-item :subtitle="store.getUser()?.email" :title="store.getUser()?.username">
           <template v-slot:prepend>
             <v-avatar color="light-green-darken-3">
               <v-icon icon="mdi-home"></v-icon>
@@ -42,18 +39,15 @@ function signUp() {
       </v-list>
       <v-menu>
         <template v-slot:activator="{ props }">
-          <v-btn
-            icon="mdi-dots-vertical"
-            variant="text"
-            v-bind="props">
+          <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props">
           </v-btn>
         </template>
         <v-card class="mx-auto" max-width="300">
           <v-list density="compact">
             <v-list-item>
               <v-list-item-title>
-                <v-btn color="primary" @click="signUp">
-                  Sing Up
+                <v-btn color="primary" @click="logOut">
+                  Log Out
                 </v-btn>
               </v-list-item-title>
             </v-list-item>
