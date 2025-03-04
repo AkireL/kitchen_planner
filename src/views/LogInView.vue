@@ -57,7 +57,7 @@ function submit(data: logInInterface) {
 }
 </script>
 <template>
-  <v-layout class="rounded rounded-md mt-5">
+  <v-layout class="rounded rounded-md">
     <v-container class="w-100">
       <v-card class="mx-auto" max-width="344">
         <v-form validate-on="submit lazy" @submit.prevent="submit(form)">
