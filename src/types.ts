@@ -28,7 +28,7 @@ export interface AuthInterface {
   id?: string;
   email?: string;
   username?: string;
-  full_name?: string;
+  fullname?: string;
 }
 
 export interface userInterface {
