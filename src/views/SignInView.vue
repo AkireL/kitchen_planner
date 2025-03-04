@@ -10,6 +10,7 @@ import {
   VCard,
   VCardTitle,
   VLayout,
+  VContainer,
 } from 'vuetify/components';
 
 import { useRouter } from 'vue-router';
@@ -18,7 +19,7 @@ import type { userInterface } from '@/types';
 const userForm = {
   username: "",
   email: "",
-  fullName: "",
+  fullname: "",
   password: "",
 }
 
@@ -34,7 +35,6 @@ const router = useRouter();
 function submit(data: userInterface) {
   const value = {
     ...data,
-    full_name: data.fullName,
   };
 
   signIn(value)
@@ -59,7 +59,7 @@ function submit(data: userInterface) {
             <v-text-field v-model="form.username" :rules="[rules]" label="User name" id="username"
               name="username"></v-text-field>
 
-            <v-text-field v-model="form.fullName" :rules="[rules]" label="Your fullname" id="fullname"
+            <v-text-field v-model="form.fullname" :rules="[rules]" label="Your fullname" id="fullname"
               name="fullname"></v-text-field>
 
             <v-text-field v-model="form.email" :rules="[rules]" label="email" id="email" name="email"></v-text-field>

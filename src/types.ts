@@ -34,7 +34,7 @@ export interface AuthInterface {
 export interface userInterface {
   username: string;
   email: string;
-  fullName: string;
+  fullname: string;
   password: string;
 }
 
