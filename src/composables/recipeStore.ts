@@ -100,7 +100,7 @@ export const useRecipeStore = defineStore('search-filters', () => {
     }
 
     createRecipesService(item)
-      .then(function ({ data }) {
+      .then(function ({ data: { data } }) {
         recipesList.value.push(data);
       })
       .catch(function (error) {
