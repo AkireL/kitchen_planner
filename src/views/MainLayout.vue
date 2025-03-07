@@ -39,16 +39,13 @@ function logout() {
       </v-list>
       <v-menu>
         <template v-slot:activator="{ props }">
-          <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props">
-          </v-btn>
+          <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"> </v-btn>
         </template>
         <v-card class="mx-auto" max-width="300">
           <v-list density="compact">
             <v-list-item>
               <v-list-item-title>
-                <v-btn color="primary" @click="logout">
-                  Log Out
-                </v-btn>
+                <v-btn color="primary" @click="logout"> Log Out </v-btn>
               </v-list-item-title>
             </v-list-item>
           </v-list>
