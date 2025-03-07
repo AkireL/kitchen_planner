@@ -5,6 +5,7 @@ export interface Recipe {
   preparation?: string;
   duration: string;
   schedule_at: string;
+  user_id: string | number;
 }
 
 export interface Recipes {
