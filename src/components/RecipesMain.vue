@@ -25,11 +25,13 @@ import {
   getPreviousWeek,
 } from '@/helpers/helpers';
 import { useRecipeStore } from '@/composables/recipeStore';
+import { useUserStore } from '@/composables/userStore';
 import { getWeekDays } from '@/helpers/helpers';
 import type { Recipe, RangeDate } from '@/types';
 
 const router = useRouter();
 const store = useRecipeStore();
+const userStore = useUserStore();
 
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
@@ -169,6 +171,7 @@ const addedRecipe = () => {
                           {{ recipe.title }}
                         </div>
                         <v-btn
+                          v-if="recipe.user_id == userStore.getUser()?.id"
                           @click="() => selectedItemToRemove(recipe)"
                           icon="mdi-delete"
                           size="md"
