@@ -1,4 +1,5 @@
 import { initData } from '@/helpers/days';
+import dayjs from 'dayjs';
 
 export function getDayOfDate(date: string) {
   const [year, month, day] = date.split('-');
@@ -10,11 +11,7 @@ export function getDayOfDate(date: string) {
 }
 
 export function formatDate(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
+  return dayjs(date).format('YYYY-MM-DD');
 }
 
 export function getDateByString(date: string) {
@@ -23,9 +20,7 @@ export function getDateByString(date: string) {
 }
 
 export function getTodayDate() {
-  const date = new Date().toISOString().slice(0, 10);
-  const [year, month, day] = date.split('-');
-  return `${year}-${month}-${day}`;
+  return dayjs().format('YYYY-MM-DD');
 }
 
 export function getFirstAndLastDayOfWeek(date: Date) {
