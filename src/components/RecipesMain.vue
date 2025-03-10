@@ -223,7 +223,7 @@ const shared = () => {
 
                 <v-menu
                   v-model="showMenu"
-                  v-if="items.length > 0"
+                  v-if="store.recipesList.length > 0"
                   :close-on-content-click="false"
                   location="end"
                 >
