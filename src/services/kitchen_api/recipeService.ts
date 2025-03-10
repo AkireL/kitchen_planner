@@ -1,4 +1,4 @@
-import type { Recipe, RecipeFiltersParams } from '@/types';
+import type { Recipe, RecipeFiltersParams, sharedRecipesInterface } from '@/types';
 import { initInstance } from './client';
 
 export function retrieveRecipesService(params: RecipeFiltersParams | object = {}) {
@@ -21,4 +21,8 @@ export function deleteRecipesService(id: string | number) {
 
 export function createRecipesService(data: Recipe) {
   return initInstance().post('/recipes', data);
+}
+
+export function sharedRecipes(data: sharedRecipesInterface) {
+  return initInstance().post('/recipes/share', data);
 }

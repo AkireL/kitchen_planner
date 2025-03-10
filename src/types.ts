@@ -47,3 +47,9 @@ export interface logInInterface {
   grant_type: string;
   client_secret: string;
 }
+
+export interface sharedRecipesInterface {
+  user_id: string | number;
+  start_date: string;
+  end_date: string;
+}

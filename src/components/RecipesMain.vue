@@ -12,6 +12,12 @@ import {
   VDialog,
   VCardActions,
   VIcon,
+  VMenu,
+  VListItem,
+  VList,
+  VDivider,
+  VSpacer,
+  VAutocomplete,
 } from 'vuetify/components';
 import HomeView from '@/views/MainLayout.vue';
 
@@ -28,15 +34,24 @@ import { useRecipeStore } from '@/composables/recipeStore';
 import { useUserStore } from '@/composables/userStore';
 import { getWeekDays } from '@/helpers/helpers';
 import type { Recipe, RangeDate } from '@/types';
+import { retrieveUsers } from '@/services/kitchen_api/userService';
+import { sharedRecipes } from '@/services/kitchen_api/recipeService';
+import { formatDate } from '@/helpers/helpers';
 
 const router = useRouter();
 const store = useRecipeStore();
 const userStore = useUserStore();
 
+const sharedUserId = ref<string | null>(null);
+const sharedUser = ref<string | null>(null);
+
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
 const selectedDate = ref<RangeDate>({ firstDate: null, lastDate: null });
 const currentDate = ref<RangeDate>({ firstDate: null, lastDate: null });
+const users = ref<string[]>([]);
+const isLoading = ref<boolean>(false);
+const showMenu = ref<boolean>(false);
 
 onMounted(() => {
   const { firstDay, lastDay } = getFirstAndLastDayOfWeek(new Date());
@@ -56,6 +71,16 @@ watch(
   },
   { deep: true },
 );
+
+watch(sharedUserId, (value) => {
+  const findUser = users.value.filter((user) => user.id === value);
+
+  if (findUser.length === 0) {
+    return;
+  }
+
+  sharedUser.value = findUser[0];
+});
 
 const recipes = computed(() => {
   if (!currentDate.value.firstDate || !currentDate.value.lastDate) {
@@ -120,6 +145,57 @@ const removeRecipe = () => {
 const addedRecipe = () => {
   router.push({ name: 'recipeForm' });
 };
+
+const searchUsers = (value: string) => {
+  if (!value) {
+    return;
+  }
+
+  isLoading.value = true;
+
+  retrieveUsers(value)
+    .then(({ data }) => {
+      users.value = data.data;
+    })
+    .catch((error) => {
+      console.error('Error retrieve users', error);
+    })
+    .finally(() => {
+      isLoading.value = false;
+    });
+};
+
+const shared = () => {
+  isLoading.value = true;
+  if (
+    !sharedUserId.value ||
+    !currentDate.value.firstDate ||
+    !currentDate.value.lastDate ||
+    !sharedUser.value
+  ) {
+    isLoading.value = false;
+
+    return;
+  }
+
+  const data = {
+    user_id: sharedUserId.value,
+    start_date: formatDate(currentDate.value.firstDate),
+    end_date: formatDate(currentDate.value.lastDate),
+  };
+
+  sharedRecipes(data)
+    .then((data) => {
+      console.log('shared recipes', data);
+    })
+    .catch((e) => {
+      console.error('Error shared recipes', e);
+    })
+    .finally(() => {
+      isLoading.value = false;
+      showMenu.value = false;
+    });
+};
 </script>
 <template>
   <HomeView>
@@ -144,6 +220,64 @@ const addedRecipe = () => {
                 -
                 {{ currentDate.lastDate ? currentDate.lastDate.toISOString()?.split('T')[0] : '' }}
                 <v-btn @click="getNextDate" icon="mdi-arrow-right" size="x-small"> </v-btn>
+
+                <v-menu
+                  v-model="showMenu"
+                  v-if="items.length > 0"
+                  :close-on-content-click="false"
+                  location="end"
+                >
+                  <template v-slot:activator="{ props }">
+                    <v-btn
+                      icon="mdi-share-variant"
+                      size="small"
+                      color="success"
+                      density="comfortable"
+                      class="ml-2"
+                      v-bind="props"
+                    >
+                    </v-btn> </template
+                  ><v-card min-width="300">
+                    <v-list>
+                      <v-list-item
+                        title="Compartir las receta de la semana"
+                        subtitle="Busca el usuario por su 'nombre de usuario'"
+                      ></v-list-item>
+                    </v-list>
+
+                    <v-divider></v-divider>
+
+                    <v-list>
+                      <v-list-item>
+                        <v-autocomplete
+                          v-model="sharedUserId"
+                          :disabled="isLoading"
+                          label="Nombre de usuario"
+                          item-title="username"
+                          item-value="id"
+                          :items="users"
+                          @update:search="
+                            (e) => {
+                              searchUsers(e);
+                            }
+                          "
+                        ></v-autocomplete>
+                      </v-list-item>
+
+                      <v-list-item>
+                        {{ sharedUser?.username }} -
+                        <span style="font-size: small; font-style: oblique">{{
+                          sharedUser?.email
+                        }}</span>
+                      </v-list-item>
+                    </v-list>
+
+                    <v-card-actions v-if="sharedUserId">
+                      <v-spacer></v-spacer>
+                      <v-btn @click="shared" :loading="isLoading"> Compartir</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-menu>
               </div>
             </div>
             <v-row dense>
