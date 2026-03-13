@@ -6,6 +6,7 @@ import LogInView from '@/views/LogInView.vue';
 import SignInView from '@/views/SignInView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
 import PresentationView from '@/views/PresentationView.vue';
+import ChatView from '@/views/ChatView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +17,14 @@ const router = createRouter({
       component: PresentationView,
       meta: {
         requiresAuth: true,
+      },
+    },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: ChatView,
+      meta: {
+        requiresAuth: false,
       },
     },
     {

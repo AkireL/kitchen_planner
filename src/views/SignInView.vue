@@ -17,11 +17,11 @@ import { useRouter } from 'vue-router';
 import type { userInterface } from '@/types';
 
 const userForm = {
-  username: "",
-  email: "",
-  fullname: "",
-  password: "",
-}
+  username: '',
+  email: '',
+  fullname: '',
+  password: '',
+};
 
 const loading = ref<boolean>(false);
 
@@ -29,10 +29,19 @@ const form = ref<userInterface>(userForm);
 
 const rules = (value: string | number | Date) => !!value || 'Este campo es obligatorio';
 
+const error = ref<string>('');
 const store = useUserStore();
 const router = useRouter();
 
 function submit(data: userInterface) {
+  if (!data || Object.values(data).some((v) => !v)) {
+    error.value = 'Todos los campos son requeridos';
+    setTimeout(() => {
+      error.value = '';
+    }, 2000);
+    return;
+  }
+
   const value = {
     ...data,
   };
@@ -45,7 +54,17 @@ function submit(data: userInterface) {
       router.push({ name: 'homeRecipe' });
     })
     .catch((e) => {
-      console.log(e);
+      if (e.response?.data?.detail) {
+        if (Array.isArray(e.response.data.detail)) {
+          error.value = e.response.data.detail.map((element: any) => element.msg).join(', ');
+        } else {
+          error.value = e.response.data.detail;
+        }
+
+        setTimeout(() => {
+          error.value = '';
+        }, 2000);
+      }
     });
 }
 </script>
@@ -56,23 +75,58 @@ function submit(data: userInterface) {
         <v-form validate-on="submit lazy" @submit.prevent="submit(form)">
           <v-sheet class="mx-auto" max-width="300">
             <v-card-title>Sign in</v-card-title>
-            <v-text-field v-model="form.username" :rules="[rules]" label="User name" id="username"
-              name="username"></v-text-field>
+            <v-text-field
+              v-model="form.username"
+              :rules="[rules]"
+              label="User name"
+              id="username"
+              name="username"
+            ></v-text-field>
 
-            <v-text-field v-model="form.fullname" :rules="[rules]" label="Your fullname" id="fullname"
-              name="fullname"></v-text-field>
+            <v-text-field
+              v-model="form.fullname"
+              :rules="[rules]"
+              label="Your fullname"
+              id="fullname"
+              name="fullname"
+            ></v-text-field>
 
-            <v-text-field v-model="form.email" :rules="[rules]" label="email" id="email" name="email"></v-text-field>
+            <v-text-field
+              v-model="form.email"
+              :rules="[rules]"
+              label="email"
+              id="email"
+              name="email"
+            ></v-text-field>
 
-            <v-text-field v-model="form.password" :rules="[rules]" label="Password" type="password" id="password"
-              name="password"></v-text-field>
+            <v-text-field
+              v-model="form.password"
+              :rules="[rules]"
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+            ></v-text-field>
 
-            <v-btn :loading="loading" class="mt-2 mb-5" color="primary" text="Submit" type="submit" block></v-btn>
+            <v-btn
+              :loading="loading"
+              class="mt-2 mb-5"
+              color="primary"
+              text="Submit"
+              type="submit"
+              block
+            ></v-btn>
           </v-sheet>
         </v-form>
 
-        <v-btn @click="() => $router.push({ name: 'logIn' })" :disabled="loading" class="mb-2 ml-5" variant="plain">Log
-          In</v-btn>
+        <v-btn
+          @click="() => $router.push({ name: 'logIn' })"
+          :disabled="loading"
+          class="mb-2 ml-5"
+          variant="plain"
+          >Log In</v-btn
+        >
+        <div class="bg-red-accent-1 pa-4 ma-3 text-white" v-if="error">{{ error }}</div>
       </v-card>
     </v-container>
   </v-layout>
