@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { KITCHEN_API_URL } from '@/config';
 import { useUserStore } from '@/composables/userStore';
 import { VBtn, VCard, VCardText, VCardTitle, VDivider, VTextarea } from 'vuetify/components';
+import HomeView from '@/views/MainLayout.vue';
 
 interface ChatMessage {
   id: string;
@@ -227,7 +228,9 @@ function renderMarkdown(markdown: string) {
       index += 1;
     }
 
-    blocks.push(`<p>${paragraphLines.map((paragraphLine) => formatInline(paragraphLine)).join('<br>')}</p>`);
+    blocks.push(
+      `<p>${paragraphLines.map((paragraphLine) => formatInline(paragraphLine)).join('<br>')}</p>`,
+    );
   }
 
   return blocks.join('');
@@ -557,99 +560,103 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-card class="chat-shell" rounded="xl" elevation="4">
-    <v-card-title class="chat-header">
-      <div>
-        <div class="text-h6">Chat</div>
-        <div class="text-caption text-medium-emphasis">
-          Hilo activo: {{ threadId }} · {{ assistantMessageCount }} respuestas
-        </div>
-      </div>
-
-      <v-btn color="primary" variant="tonal" @click="startNewChat"> Nuevo chat </v-btn>
-    </v-card-title>
-
-    <v-divider />
-
-    <v-card-text class="chat-body">
-      <div ref="chatContainer">
-        <div v-if="!hasMessages" class="chat-empty text-medium-emphasis">
-          Escribe tu primera pregunta para iniciar el chat.
-        </div>
-
-        <div
-          v-for="(message, index) in messages"
-          :key="message.id"
-          class="message-row"
-          :class="message.role"
-        >
-          <div class="message-bubble" :class="message.role">
-            <div v-if="message.role === 'user'" class="message-label">Tú</div>
-            <div v-else class="message-label">Modelo</div>
-
-            <div v-if="message.role === 'assistant'" class="assistant-content">
-              <div
-                class="markdown-content"
-                v-html="renderMarkdown(message.text || (message.status === 'streaming' ? '...' : ''))"
-              ></div>
-
-              <div v-if="getYoutubeEmbedUrl(message.text)" class="video-embed">
-                <iframe
-                  :src="getYoutubeEmbedUrl(message.text)!"
-                  title="Video de YouTube"
-                  loading="lazy"
-                  referrerpolicy="strict-origin-when-cross-origin"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-              </div>
-            </div>
-            <div v-else class="user-message">{{ message.text }}</div>
-
-            <div
-              v-if="message.role === 'assistant' && message.status === 'error'"
-              class="message-error"
-            >
-              <v-btn variant="text" color="primary" size="small" @click="retryMessage(index)">
-                Reintentar
-              </v-btn>
-            </div>
+  <HomeView>
+    <v-card class="chat-shell" rounded="xl" elevation="4">
+      <v-card-title class="chat-header">
+        <div>
+          <div class="text-h6">Chat</div>
+          <div class="text-caption text-medium-emphasis">
+            Hilo activo: {{ threadId }} · {{ assistantMessageCount }} respuestas
           </div>
         </div>
 
-        <div v-if="streaming" class="streaming-indicator text-medium-emphasis">
-          El modelo está escribiendo...
+        <v-btn color="primary" variant="tonal" @click="startNewChat"> Nuevo chat </v-btn>
+      </v-card-title>
+
+      <v-divider />
+
+      <v-card-text class="chat-body">
+        <div ref="chatContainer">
+          <div v-if="!hasMessages" class="chat-empty text-medium-emphasis">
+            Escribe tu primera pregunta para iniciar el chat.
+          </div>
+
+          <div
+            v-for="(message, index) in messages"
+            :key="message.id"
+            class="message-row"
+            :class="message.role"
+          >
+            <div class="message-bubble" :class="message.role">
+              <div v-if="message.role === 'user'" class="message-label">Tú</div>
+              <div v-else class="message-label">Modelo</div>
+
+              <div v-if="message.role === 'assistant'" class="assistant-content">
+                <div
+                  class="markdown-content"
+                  v-html="
+                    renderMarkdown(message.text || (message.status === 'streaming' ? '...' : ''))
+                  "
+                ></div>
+
+                <div v-if="getYoutubeEmbedUrl(message.text)" class="video-embed">
+                  <iframe
+                    :src="getYoutubeEmbedUrl(message.text)!"
+                    title="Video de YouTube"
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                  ></iframe>
+                </div>
+              </div>
+              <div v-else class="user-message">{{ message.text }}</div>
+
+              <div
+                v-if="message.role === 'assistant' && message.status === 'error'"
+                class="message-error"
+              >
+                <v-btn variant="text" color="primary" size="small" @click="retryMessage(index)">
+                  Reintentar
+                </v-btn>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="streaming" class="streaming-indicator text-medium-emphasis">
+            El modelo está escribiendo...
+          </div>
         </div>
-      </div>
-    </v-card-text>
+      </v-card-text>
 
-    <v-divider />
+      <v-divider />
 
-    <form class="chat-composer" @submit.prevent="sendMessage">
-      <v-textarea
-        v-model="input"
-        class="chat-input"
-        auto-grow
-        rows="3"
-        max-rows="7"
-        hide-details
-        variant="outlined"
-        label="Escribe tu pregunta"
-        placeholder="Ej: dame una receta con pollo y arroz"
-        :disabled="streaming"
-      />
+      <form class="chat-composer" @submit.prevent="sendMessage">
+        <v-textarea
+          v-model="input"
+          class="chat-input"
+          auto-grow
+          rows="3"
+          max-rows="7"
+          hide-details
+          variant="outlined"
+          label="Escribe tu pregunta"
+          placeholder="Ej: dame una receta con pollo y arroz"
+          :disabled="streaming"
+        />
 
-      <v-btn
-        color="primary"
-        size="large"
-        type="submit"
-        :loading="streaming"
-        :disabled="streaming || !input.trim()"
-      >
-        Enviar
-      </v-btn>
-    </form>
-  </v-card>
+        <v-btn
+          color="primary"
+          size="large"
+          type="submit"
+          :loading="streaming"
+          :disabled="streaming || !input.trim()"
+        >
+          Enviar
+        </v-btn>
+      </form>
+    </v-card>
+  </HomeView>
 </template>
 
 <style scoped>
