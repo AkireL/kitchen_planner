@@ -88,7 +88,7 @@ export function getWeekDays(startDate: Date, endDate: Date) {
     result.push({
       id: start.getDay() == 0 ? 7 : start.getDay(),
       day: daysOfWeek[start.getDay()],
-      date: start.toISOString().split('T')[0],
+      date: start.toLocaleDateString('en-CA'),
       list: [],
     });
 
