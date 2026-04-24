@@ -3,6 +3,7 @@ import { useUserStore } from '@/composables/userStore';
 import { useRouter } from 'vue-router';
 import {
   VAppBar,
+  VAppBarTitle,
   VList,
   VListItem,
   VMain,
@@ -27,7 +28,13 @@ function logout() {
 
 <template>
   <v-layout class="rounded rounded-md">
-    <v-app-bar title="Recetas de cocina">
+    <v-app-bar>
+      <v-app-bar-title>
+        <div class="d-flex align-center">
+          <a href="/recipes" class="mr-2"><v-icon icon="mdi-home"></v-icon></a>
+          <span>Recetas de cocina</span>
+        </div>
+      </v-app-bar-title>
       <v-list>
         <v-list-item :subtitle="store.getUser()?.email" :title="store.getUser()?.username">
           <template v-slot:prepend>
@@ -52,10 +59,16 @@ function logout() {
         </v-card>
       </v-menu>
     </v-app-bar>
-    <v-main class="d-flex align-center justify-center" style="min-height: 300px">
-      <v-container class="w-100">
+    <v-main class="d-flex align-center justify-center" style="min-height: 301px">
+      <v-container class="">
         <slot />
       </v-container>
     </v-main>
   </v-layout>
 </template>
+<style scoped>
+.container {
+  display: grid;
+  place-items: center; /* centra vertical y horizontal */
+}
+</style>

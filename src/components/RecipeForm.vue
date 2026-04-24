@@ -8,6 +8,7 @@ import {
   VBtn,
   VRow,
   VCol,
+  VTextarea,
 } from 'vuetify/components';
 import HomeView from '@/views/MainLayout.vue';
 
@@ -120,7 +121,7 @@ const addMoreIngredients = () => {
             </v-col>
             <v-col cols="12">
               <div class="text-subtitle-1 text-medium-emphasis">Preparación</div>
-              <v-text-field v-model="recipe.preparation" required density="compact"></v-text-field>
+              <v-textarea v-model="recipe.preparation" required density="compact"></v-textarea>
             </v-col>
           </v-row>
           <v-divider></v-divider>

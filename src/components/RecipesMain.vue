@@ -4,7 +4,6 @@ import {
   VCardTitle,
   VCardSubtitle,
   VCardText,
-  VDataIterator,
   VBtn,
   VRow,
   VCol,
@@ -13,11 +12,7 @@ import {
   VCardActions,
   VIcon,
   VMenu,
-  VListItem,
-  VList,
-  VDivider,
   VSpacer,
-  VAutocomplete,
 } from 'vuetify/components';
 import HomeView from '@/views/MainLayout.vue';
 
@@ -43,7 +38,6 @@ const store = useRecipeStore();
 const userStore = useUserStore();
 
 const sharedUserId = ref<string | null>(null);
-const sharedUser = ref<string | null>(null);
 
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
@@ -71,16 +65,6 @@ watch(
   },
   { deep: true },
 );
-
-watch(sharedUserId, (value) => {
-  const findUser = users.value.filter((user) => user.id === value);
-
-  if (findUser.length === 0) {
-    return;
-  }
-
-  sharedUser.value = findUser[0];
-});
 
 const recipes = computed(() => {
   if (!currentDate.value.firstDate || !currentDate.value.lastDate) {
@@ -145,209 +129,69 @@ const removeRecipe = () => {
 const addedRecipe = () => {
   router.push({ name: 'recipeForm' });
 };
-
-const searchUsers = (value: string) => {
-  if (!value) {
-    return;
-  }
-
-  isLoading.value = true;
-
-  retrieveUsers(value)
-    .then(({ data }) => {
-      users.value = data.data;
-    })
-    .catch((error) => {
-      console.error('Error retrieve users', error);
-    })
-    .finally(() => {
-      isLoading.value = false;
-    });
-};
-
-const shared = () => {
-  isLoading.value = true;
-  if (
-    !sharedUserId.value ||
-    !currentDate.value.firstDate ||
-    !currentDate.value.lastDate ||
-    !sharedUser.value
-  ) {
-    isLoading.value = false;
-
-    return;
-  }
-
-  const data = {
-    user_id: sharedUserId.value,
-    start_date: formatDate(currentDate.value.firstDate),
-    end_date: formatDate(currentDate.value.lastDate),
-  };
-
-  sharedRecipes(data)
-    .then((data) => {
-      console.log('shared recipes', data);
-    })
-    .catch((e) => {
-      console.error('Error shared recipes', e);
-    })
-    .finally(() => {
-      isLoading.value = false;
-      showMenu.value = false;
-    });
-};
 </script>
 <template>
   <HomeView>
     <v-card>
-      <v-data-iterator :items="recipes" :items-per-page="3">
-        <template v-slot:default="{ items }">
-          <v-container class="pa-2" fluid>
-            <div class="d-flex justify-space-between align-center pb-2">
-              <v-btn
-                @click="() => addedRecipe()"
-                icon="mdi-plus"
-                size="x-small"
-                color="success"
-                density="comfortable"
-              >
-              </v-btn>
-              <div>
-                <v-btn @click="getPreviousDate" icon="mdi-arrow-left" size="x-small"></v-btn>
-                {{
-                  currentDate.firstDate ? currentDate.firstDate?.toISOString()?.split('T')[0] : ''
-                }}
-                -
-                {{ currentDate.lastDate ? currentDate.lastDate.toISOString()?.split('T')[0] : '' }}
-                <v-btn @click="getNextDate" icon="mdi-arrow-right" size="x-small"> </v-btn>
-
-                <v-menu
-                  v-model="showMenu"
-                  v-if="store.recipesList.length > 0"
-                  :close-on-content-click="false"
-                  location="end"
-                >
-                  <template v-slot:activator="{ props }">
-                    <v-btn
-                      icon="mdi-share-variant"
-                      size="small"
-                      color="success"
-                      density="comfortable"
-                      class="ml-2"
-                      v-bind="props"
-                    >
-                    </v-btn> </template
-                  ><v-card min-width="300">
-                    <v-list>
-                      <v-list-item
-                        title="Compartir las receta de la semana"
-                        subtitle="Busca el usuario por su 'nombre de usuario'"
-                      ></v-list-item>
-                    </v-list>
-
-                    <v-divider></v-divider>
-
-                    <v-list>
-                      <v-list-item>
-                        <v-autocomplete
-                          v-model="sharedUserId"
-                          :disabled="isLoading"
-                          label="Nombre de usuario"
-                          item-title="username"
-                          item-value="id"
-                          :items="users"
-                          @update:search="
-                            (e) => {
-                              searchUsers(e);
-                            }
-                          "
-                        ></v-autocomplete>
-                      </v-list-item>
-
-                      <v-list-item>
-                        {{ sharedUser?.username }} -
-                        <span style="font-size: small; font-style: oblique">{{
-                          sharedUser?.email
-                        }}</span>
-                      </v-list-item>
-                    </v-list>
-
-                    <v-card-actions v-if="sharedUserId">
-                      <v-spacer></v-spacer>
-                      <v-btn @click="shared" :loading="isLoading"> Compartir</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-menu>
-              </div>
-            </div>
-            <v-row dense>
-              <v-col v-for="item in items" :key="item.raw.id" cols="auto" md="4">
-                <v-card class="pb-5 overflow-auto" flat style="max-height: 500px">
-                  <v-card-title :class="'day-' + item.raw.id">
-                    {{ item.raw.day }} <span class="text-caption">{{ item.raw.date }} </span>
-                  </v-card-title>
-                  <!-- When there are not recipes -->
-                  <v-card v-if="item.raw.list.length === 0">
-                    <v-card-text class="p-0">
-                      <v-row align="center" no-gutters>
-                        <v-col class="" cols="6">Hoy no tienes recetas</v-col>
-                        <v-col class="text-right" cols="6">
-                          <v-icon color="warning" icon="mdi-food-off" size="40"></v-icon>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                  <!-- Content or body -->
-                  <v-card v-for="(recipe, index) in item.raw.list" class="mb-2" :key="index">
-                    <v-card-subtitle class="pt-2">
-                      <div class="d-flex justify-space-between align-center">
-                        <div>
-                          {{ recipe.title }}
-                        </div>
-                        <v-btn
-                          v-if="recipe.user_id == userStore.getUser()?.id"
-                          @click="() => selectedItemToRemove(recipe)"
-                          icon="mdi-delete"
-                          size="md"
-                          color="red"
-                          variant="text"
-                          style="z-index: 1"
-                        ></v-btn>
-                      </div>
-                    </v-card-subtitle>
-                    <v-card-text @click="() => goToDetail(recipe.id)">
-                      <div class="text-truncate">
-                        {{ recipe.preparation }}
-                      </div>
-                    </v-card-text>
-                  </v-card>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-container>
-        </template>
-        <template v-slot:footer="{ page, pageCount, prevPage, nextPage }">
-          <div class="d-flex align-center justify-center pa-4">
+      <div>
+        <v-container class="pa-2" fluid>
+          <div class="d-flex justify-space-between align-center pb-2">
             <v-btn
-              :disabled="page === 1"
+              @click="() => addedRecipe()"
+              icon="mdi-plus"
+              size="x-small"
+              color="success"
               density="comfortable"
-              icon="mdi-arrow-left"
-              variant="tonal"
-              rounded
-              @click="prevPage"
-            ></v-btn>
-            <div class="mx-2 text-caption">Página {{ page }} de {{ pageCount }}</div>
-            <v-btn
-              :disabled="page >= pageCount"
-              density="comfortable"
-              icon="mdi-arrow-right"
-              variant="tonal"
-              rounded
-              @click="nextPage"
-            ></v-btn>
+            >
+            </v-btn>
           </div>
-        </template>
-      </v-data-iterator>
+
+          <v-row dense>
+            <v-col v-for="item in recipes" :key="item.id" cols="auto" md="4">
+              <v-card class="pb-5 overflow-auto" flat>
+                <v-card-title :class="'day-' + item.id">
+                  {{ item.day }} <span class="text-caption">{{ item.date }} </span>
+                </v-card-title>
+                <!-- When there are not recipes -->
+                <v-card v-if="item.list.length === 0">
+                  <v-card-text class="p-0">
+                    <v-row align="center" no-gutters>
+                      <v-col class="" cols="6">Hoy no tienes recetas</v-col>
+                      <v-col class="text-right" cols="6">
+                        <v-icon color="warning" icon="mdi-food-off" size="40"></v-icon>
+                      </v-col>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+                <!-- Content or body -->
+                <v-card v-for="(recipe, index) in item.list" class="mb-2" :key="index">
+                  <v-card-subtitle class="pt-2">
+                    <div class="d-flex justify-space-between align-center">
+                      <div>
+                        {{ recipe.title }}
+                      </div>
+                      <v-btn
+                        v-if="recipe.user_id == userStore.getUser()?.id"
+                        @click="() => selectedItemToRemove(recipe)"
+                        icon="mdi-delete"
+                        size="md"
+                        color="red"
+                        variant="text"
+                        style="z-index: 1"
+                      ></v-btn>
+                    </div>
+                  </v-card-subtitle>
+                  <v-card-text @click="() => goToDetail(recipe.id)">
+                    <div class="text-truncate">
+                      {{ recipe.preparation }}
+                    </div>
+                  </v-card-text>
+                </v-card>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </div>
     </v-card>
   </HomeView>
 
