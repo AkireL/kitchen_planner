@@ -29,17 +29,13 @@ function logout() {
 <template>
   <v-layout class="">
     <v-app-bar :elevation="0">
-      <v-app-bar-title>
-        <div class="d-flex align-center">
-          <a href="/recipes" class="mr-2"><v-icon icon="mdi-home"></v-icon></a>
-          <span>Recetas de cocina</span>
-        </div>
-      </v-app-bar-title>
+      <v-app-bar-title></v-app-bar-title>
+
       <v-list>
         <v-list-item :subtitle="store.getUser()?.email" :title="store.getUser()?.username">
           <template v-slot:prepend>
             <v-avatar color="light-green-darken-3">
-              <v-icon icon="mdi-home"></v-icon>
+              <v-icon icon="mdi-person"></v-icon>
             </v-avatar>
           </template>
         </v-list-item>

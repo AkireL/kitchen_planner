@@ -16,7 +16,7 @@ const router = createRouter({
       name: 'home',
       component: PresentationView,
       meta: {
-        requiresAuth: true,
+        requiresAuth: false,
       },
     },
     {

@@ -12,6 +12,7 @@ import {
   VList,
   VListItem,
   VDivider,
+  VAvatar,
 } from 'vuetify/components';
 import HomeView from '@/views/MainLayout.vue';
 
@@ -158,6 +159,12 @@ const addedRecipe = () => {
 
 <template>
   <HomeView>
+    <div class="d-flex ga-3 bg-grey-lighten-4 py-2 pl-1">
+      <v-avatar color="orange" size="30" class="mb-0">
+        <v-icon icon="mdi-chef-hat" size="20" color="white" />
+      </v-avatar>
+      <p class="text-h6 font-weight-black">Mis recetas</p>
+    </div>
     <v-container class="pa-2 pa-md-4" fluid>
       <!-- FAB for mobile -->
       <v-btn
