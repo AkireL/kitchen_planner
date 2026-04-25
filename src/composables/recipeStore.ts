@@ -92,20 +92,22 @@ export const useRecipeStore = defineStore('search-filters', () => {
       });
   };
 
-  const addRecipe = (newItem: Recipe) => {
+  const addRecipe = async (newItem: Recipe) => {
     const item = { ...newItem };
 
     if (!newItem.preparation || newItem.preparation.length <= 0) {
       delete item['preparation'];
     }
-
-    createRecipesService(item)
-      .then(function ({ data: { data } }) {
-        recipesList.value.push(data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    try {
+      const {
+        data: { data },
+      } = await createRecipesService(item);
+      recipesList.value.push(data);
+      return { ok: true, message: '' };
+    } catch (error) {
+      console.log(error);
+      return { ok: false, message: error };
+    }
   };
 
   return {

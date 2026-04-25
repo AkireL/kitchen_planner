@@ -19,8 +19,8 @@ export function deleteRecipesService(id: string | number) {
   return initInstance().delete('/recipes/' + id);
 }
 
-export function createRecipesService(data: Recipe) {
-  return initInstance().post('/recipes', data);
+export async function createRecipesService(data: Recipe) {
+  return await initInstance().post('/recipes', data);
 }
 
 export function sharedRecipes(data: sharedRecipesInterface) {

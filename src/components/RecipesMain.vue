@@ -2,17 +2,16 @@
 import {
   VCard,
   VCardTitle,
-  VCardSubtitle,
   VCardText,
   VBtn,
-  VRow,
-  VCol,
   VContainer,
   VDialog,
   VCardActions,
   VIcon,
-  VMenu,
-  VSpacer,
+  VChip,
+  VList,
+  VListItem,
+  VDivider,
 } from 'vuetify/components';
 import HomeView from '@/views/MainLayout.vue';
 
@@ -24,28 +23,35 @@ import {
   getFirstAndLastDayOfWeek,
   getNextWeek,
   getPreviousWeek,
+  truncateText,
 } from '@/helpers/helpers';
 import { useRecipeStore } from '@/composables/recipeStore';
 import { useUserStore } from '@/composables/userStore';
-import { getWeekDays } from '@/helpers/helpers';
+import { getWeekDays, getDay } from '@/helpers/helpers';
 import type { Recipe, RangeDate } from '@/types';
-import { retrieveUsers } from '@/services/kitchen_api/userService';
-import { sharedRecipes } from '@/services/kitchen_api/recipeService';
-import { formatDate } from '@/helpers/helpers';
 
 const router = useRouter();
 const store = useRecipeStore();
 const userStore = useUserStore();
 
-const sharedUserId = ref<string | null>(null);
-
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
 const selectedDate = ref<RangeDate>({ firstDate: null, lastDate: null });
 const currentDate = ref<RangeDate>({ firstDate: null, lastDate: null });
-const users = ref<string[]>([]);
-const isLoading = ref<boolean>(false);
-const showMenu = ref<boolean>(false);
+const preparedRecipes = ref(new Set<string>());
+const expandedDays = ref<Set<number>>(new Set());
+
+const toggleDay = (dayId: number) => {
+  if (expandedDays.value.has(dayId)) {
+    expandedDays.value.delete(dayId);
+  } else {
+    expandedDays.value.add(dayId);
+  }
+};
+
+const isDayExpanded = (dayId: number) => {
+  return expandedDays.value.has(dayId);
+};
 
 onMounted(() => {
   const { firstDay, lastDay } = getFirstAndLastDayOfWeek(new Date());
@@ -56,6 +62,11 @@ onMounted(() => {
   currentDate.value.lastDate = lastDay;
 
   store.retrieveRecipes(currentDate.value.firstDate, currentDate.value.lastDate);
+
+  // Expand today's day by default
+  const todayDay = new Date().getDay();
+  const dayIndex = todayDay === 0 ? 7 : todayDay;
+  expandedDays.value.add(dayIndex);
 });
 
 watch(
@@ -86,6 +97,20 @@ const recipes = computed(() => {
   return newData;
 });
 
+const today = computed(() => {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+});
+
+const isToday = (dateStr: string | null) => {
+  if (!dateStr) return false;
+  return dateStr === today.value;
+};
+
+const isPrepared = (recipeId: number | string) => {
+  return preparedRecipes.value.has(String(recipeId));
+};
+
 const getNextDate = () => {
   if (!currentDate.value.firstDate) {
     return;
@@ -112,7 +137,7 @@ const goToDetail = (id: number | string) => {
 };
 
 const selectedItemToRemove = (recipe: Recipe) => {
-  isOpen.value = !isOpen.value;
+  isOpen.value = true;
   recipeSelected.value = recipe;
 };
 
@@ -130,69 +155,113 @@ const addedRecipe = () => {
   router.push({ name: 'recipeForm' });
 };
 </script>
+
 <template>
   <HomeView>
-    <v-card>
-      <div>
-        <v-container class="pa-2" fluid>
-          <div class="d-flex justify-space-between align-center pb-2">
-            <v-btn
-              @click="() => addedRecipe()"
-              icon="mdi-plus"
-              size="x-small"
-              color="success"
-              density="comfortable"
+    <v-container class="pa-2 pa-md-4" fluid>
+      <!-- FAB for mobile -->
+      <v-btn
+        class="week-fab d-md-none"
+        color="primary"
+        icon="mdi-plus"
+        size="large"
+        style="bottom: 80px; right: 16px; z-index: 100"
+        @click="addedRecipe"
+      />
+
+      <!-- Day sections -->
+      <v-card
+        v-for="item in recipes"
+        :key="item.id"
+        class="day-card mb-4"
+        :class="{ 'day-today': isToday(item.date) }"
+        elevation="0"
+      >
+        <!-- Day header -->
+        <v-card-title class="day-header py-2" @click="toggleDay(item.id)">
+          <div class="d-flex align-center flex-wrap flex-md-nowrap gap-2">
+            <v-icon
+              size="small"
+              :class="{ 'rotate-90': isDayExpanded(item.id) || isToday(item.date) }"
+              class="expand-icon mr-1"
             >
-            </v-btn>
+              mdi-chevron-right
+            </v-icon>
+
+            <span class="text-body-2 mr-2" :class="{ 'text-today': isToday(item.date) }">
+              {{ item.day }}
+            </span>
+            <span class="text-h4 text-grey-darken-1" :class="{ 'text-today': isToday(item.date) }">
+              {{ getDay(item.date) }}
+            </span>
+            <v-chip v-if="isToday(item.date)" class="today-chip" size="x-small" color="#1D6A54">
+              hoy
+            </v-chip>
           </div>
 
-          <v-row dense>
-            <v-col v-for="item in recipes" :key="item.id" cols="auto" md="4">
-              <v-card class="pb-5 overflow-auto" flat>
-                <v-card-title :class="'day-' + item.id">
-                  {{ item.day }} <span class="text-caption">{{ item.date }} </span>
-                </v-card-title>
-                <!-- When there are not recipes -->
-                <v-card v-if="item.list.length === 0">
-                  <v-card-text class="p-0">
-                    <v-row align="center" no-gutters>
-                      <v-col class="" cols="6">Hoy no tienes recetas</v-col>
-                      <v-col class="text-right" cols="6">
-                        <v-icon color="warning" icon="mdi-food-off" size="40"></v-icon>
-                      </v-col>
-                    </v-row>
-                  </v-card-text>
-                </v-card>
-                <!-- Content or body -->
-                <v-card v-for="(recipe, index) in item.list" class="mb-2" :key="index">
-                  <v-card-subtitle class="pt-2">
-                    <div class="d-flex justify-space-between align-center">
-                      <div>
-                        {{ recipe.title }}
-                      </div>
-                      <v-btn
-                        v-if="recipe.user_id == userStore.getUser()?.id"
-                        @click="() => selectedItemToRemove(recipe)"
-                        icon="mdi-delete"
-                        size="md"
-                        color="red"
-                        variant="text"
-                        style="z-index: 1"
-                      ></v-btn>
-                    </div>
-                  </v-card-subtitle>
-                  <v-card-text @click="() => goToDetail(recipe.id)">
-                    <div class="text-truncate">
-                      {{ recipe.preparation }}
-                    </div>
-                  </v-card-text>
-                </v-card>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </div>
-    </v-card>
+          <v-btn
+            class="d-none d-md-inline-flex"
+            variant="outlined"
+            color="primary"
+            size="small"
+            @click.stop="addedRecipe"
+          >
+            <v-icon start>mdi-plus</v-icon>
+            añadir receta
+          </v-btn>
+        </v-card-title>
+
+        <!-- Divider -->
+        <v-divider class="day-divider" :class="{ 'divider-today': isToday(item.date) }" />
+
+        <!-- Recipes list -->
+        <v-expand-transition>
+          <v-card-text v-show="isDayExpanded(item.id) || isToday(item.date)" class="pa-0">
+            <v-list v-if="item.list.length > 0" density="compact">
+              <v-list-item
+                v-for="recipe in item.list"
+                :key="recipe.id"
+                class="recipe-item px-5 border-b-sm"
+                :class="{ 'recipe-prepared': isPrepared(recipe.id) }"
+                @click="goToDetail(recipe.id)"
+              >
+                <v-list-item-title
+                  class="recipe-title text-subtitle-1"
+                  :class="{ 'text-done': isPrepared(recipe.id) }"
+                >
+                  <p class="font-weight-semibold">{{ recipe.title }}</p>
+                  <p class="text-caption pl-3">{{ truncateText(recipe.preparation) }}</p>
+                </v-list-item-title>
+
+                <template #append>
+                  <v-chip v-if="recipe.duration" size="x-small" variant="outlined" class="mr-2">
+                    {{ recipe.duration }}
+                  </v-chip>
+
+                  <v-btn
+                    v-if="recipe.user_id == userStore.getUser()?.id"
+                    icon="mdi-delete"
+                    size="small"
+                    variant="text"
+                    color="error"
+                    @click.stop="selectedItemToRemove(recipe)"
+                  />
+                </template>
+              </v-list-item>
+            </v-list>
+
+            <!-- Empty state -->
+            <v-card-text
+              v-else
+              class="text-center pa-4"
+              :class="{ 'text-today': isToday(item.date) }"
+            >
+              <span class="text-medium-emphasis">Sin recetas</span>
+            </v-card-text>
+          </v-card-text>
+        </v-expand-transition>
+      </v-card>
+    </v-container>
   </HomeView>
 
   <!-- Modal -->
@@ -200,79 +269,92 @@ const addedRecipe = () => {
     <v-card title="Confirmación">
       <v-card-text>¿Desea eliminar? </v-card-text>
       <v-card-actions>
-        <v-btn color="primary" @click="removeRecipe">Aceptar</v-btn>
+        <v-btn color="primary" variant="flat" @click="removeRecipe">Aceptar</v-btn>
         <v-btn
           color="primary"
+          variant="text"
           @click="
             () => {
               isOpen = false;
               recipeSelected = null;
             }
           "
-          >Cancelar</v-btn
         >
+          Cancelar
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <style scoped>
-.v-card:has(> .v-card-text:hover) {
-  background-color: #e0e0e0;
+.day-today {
+  border-color: #1d6a54;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   cursor: pointer;
 }
 
-.day-1 {
-  background: linear-gradient(135deg, rgba(255, 105, 180, 0.8), rgba(138, 43, 226, 0.8));
-  background-size: 400% 400%;
-  animation: gradientAnimation 10s ease infinite;
+.expand-icon {
+  transition: transform 0.2s ease;
 }
 
-.day-2 {
-  background: linear-gradient(45deg, rgba(0, 191, 255, 0.8), rgba(255, 99, 71, 0.8));
-  background-size: 400% 400%;
-  animation: gradientAnimation 8s ease infinite;
+.rotate-90 {
+  transform: rotate(90deg);
 }
 
-.day-3 {
-  background: linear-gradient(60deg, rgba(34, 193, 195, 0.8), rgba(253, 187, 45, 0.8));
-  background-size: 400% 400%;
-  animation: gradientAnimation 12s ease infinite;
+.day-name {
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
-.day-4 {
-  background: linear-gradient(120deg, rgba(255, 215, 0, 0.8), rgba(255, 69, 0, 0.8));
-  background-size: 400% 400%;
-  animation: gradientAnimation 9s ease infinite;
+.text-today {
+  color: #1d6a54 !important;
+  font-weight: 500;
 }
 
-.day-5 {
-  background: linear-gradient(90deg, rgba(255, 0, 255, 0.8), rgba(0, 255, 255, 0.8));
-  background-size: 400% 400%;
-  animation: gradientAnimation 6s ease infinite;
+.today-chip {
+  color: white !important;
 }
 
-.day-6 {
-  background: linear-gradient(135deg, rgba(144, 238, 144, 0.8), rgba(255, 69, 0, 0.8));
-  background-size: 400% 400%;
-  animation: gradientAnimation 11s ease infinite;
+.day-divider {
+  opacity: 0.2;
 }
 
-.day-7 {
-  background: linear-gradient(180deg, rgba(255, 165, 0, 0.8), rgba(255, 20, 147, 0.8));
-  background-size: 400% 400%;
-  animation: gradientAnimation 7s ease infinite;
+.divider-today {
+  height: 3px;
+  opacity: 1;
+  background-color: #1d6a54;
 }
 
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.recipe-item {
+  min-height: 48px;
+  border-radius: 8px;
+}
+
+.recipe-prepared {
+  background: rgba(var(--v-theme-surface-variant), 0.3);
+}
+
+.recipe-title {
+  font-size: 0.95rem;
+}
+
+.text-done {
+  text-decoration: line-through;
+  color: rgb(var(--v-theme-on-surface)) !important;
+  opacity: 0.7;
+}
+
+.week-fab {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  z-index: 100;
 }
 </style>

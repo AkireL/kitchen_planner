@@ -37,6 +37,11 @@ export function getFirstAndLastDayOfWeek(date: Date) {
   };
 }
 
+export function getDay(date: string): number {
+  const dateObj = new Date(date);
+  return dateObj.getDate();
+}
+
 export function getNextWeek(startDate: Date) {
   const date = getFirstAndLastDayOfWeek(startDate);
   const start = date.firstDay;
@@ -74,7 +79,7 @@ export function getPreviousWeek(startDate: Date) {
 }
 
 export function getWeekDays(startDate: Date, endDate: Date) {
-  const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const daysOfWeek = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
   const start = new Date(startDate);
   const end = new Date(endDate);
 
@@ -100,4 +105,11 @@ export function getWeekDays(startDate: Date, endDate: Date) {
   }
 
   return result;
+}
+
+export function truncateText(text: string, maxLength: number = 150): string {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.slice(0, maxLength) + '...';
 }

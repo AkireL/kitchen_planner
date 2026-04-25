@@ -61,7 +61,12 @@ const submit = async () => {
     return;
   }
 
-  store.addRecipe(recipe.value);
+  const { ok, message } = await store.addRecipe(recipe.value);
+  if (ok) {
+    console.log('todo bien');
+  } else {
+    console.log('salio mal', message);
+  }
   loading.value = false;
   router.push({ name: 'homeRecipe' });
 };

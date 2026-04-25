@@ -27,8 +27,8 @@ function logout() {
 </script>
 
 <template>
-  <v-layout class="rounded rounded-md">
-    <v-app-bar>
+  <v-layout class="">
+    <v-app-bar :elevation="0">
       <v-app-bar-title>
         <div class="d-flex align-center">
           <a href="/recipes" class="mr-2"><v-icon icon="mdi-home"></v-icon></a>
