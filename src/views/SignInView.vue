@@ -26,6 +26,7 @@ const userForm = {
 const loading = ref<boolean>(false);
 
 const form = ref<userInterface>(userForm);
+const showPassword = ref<boolean>(false);
 
 const rules = (value: string | number | Date) => !!value || 'Este campo es obligatorio';
 
@@ -103,9 +104,11 @@ function submit(data: userInterface) {
               v-model="form.password"
               :rules="[rules]"
               label="Password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               id="password"
               name="password"
+              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+              @click:append-inner="() => (showPassword = !showPassword)"
             ></v-text-field>
 
             <v-btn

@@ -25,6 +25,7 @@ import {
   getNextWeek,
   getPreviousWeek,
   truncateText,
+  getMonthName,
 } from '@/helpers/helpers';
 import { useRecipeStore } from '@/composables/recipeStore';
 import { useUserStore } from '@/composables/userStore';
@@ -45,9 +46,9 @@ const expandedDays = ref<Set<number>>(new Set());
 const toggleDay = (dayId: number) => {
   if (expandedDays.value.has(dayId)) {
     expandedDays.value.delete(dayId);
-  } else {
-    expandedDays.value.add(dayId);
+    return;
   }
+  expandedDays.value.add(dayId);
 };
 
 const isDayExpanded = (dayId: number) => {
@@ -175,6 +176,7 @@ const addedRecipe = () => {
         style="bottom: 80px; right: 16px; z-index: 100"
         @click="addedRecipe"
       />
+      <div>{{ currentDate.firstDate ? getMonthName(currentDate.firstDate) : '' }}</div>
 
       <!-- Day sections -->
       <v-card
@@ -189,7 +191,7 @@ const addedRecipe = () => {
           <div class="d-flex align-center flex-wrap flex-md-nowrap gap-2">
             <v-icon
               size="small"
-              :class="{ 'rotate-90': isDayExpanded(item.id) || isToday(item.date) }"
+              :class="{ 'rotate-90': isDayExpanded(item.id) }"
               class="expand-icon mr-1"
             >
               mdi-chevron-right
@@ -223,7 +225,7 @@ const addedRecipe = () => {
 
         <!-- Recipes list -->
         <v-expand-transition>
-          <v-card-text v-show="isDayExpanded(item.id) || isToday(item.date)" class="pa-0">
+          <v-card-text v-show="isDayExpanded(item.id)" class="pa-0">
             <v-list v-if="item.list.length > 0" density="compact">
               <v-list-item
                 v-for="recipe in item.list"
