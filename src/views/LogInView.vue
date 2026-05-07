@@ -18,6 +18,7 @@ import type { logInInterface } from '@/types';
 
 const loading = ref<boolean>(false);
 const error = ref<string>('');
+const showPassword = ref<boolean>(false);
 
 const form = ref<logInInterface>({
   username: '',
@@ -104,7 +105,9 @@ function submit(data: logInInterface) {
               label="Password"
               name="password"
               id="password"
-              :type="'password'"
+              :type="showPassword ? 'text' : 'password'"
+              :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+              @click:append-inner="() => (showPassword = !showPassword)"
             ></v-text-field>
 
             <v-btn
