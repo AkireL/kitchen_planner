@@ -12,8 +12,10 @@ import {
   VIcon,
   VAvatar,
 } from 'vuetify/components';
+import { useUserStore } from '@/composables/userStore';
 
 const router = useRouter();
+const store = useUserStore();
 
 const goToLogin = () => {
   router.push({ name: 'logIn' });
@@ -44,18 +46,24 @@ const goToSignUp = () => {
                 Organiza tus recetas por semana.<br />
                 Planifica, guarda y consulta tus comidas desde una sola vista.
               </p>
+              <template v-if="!store.getUser()?.email">
+                <div class="d-flex flex-column flex-sm-row justify-center gap-4">
+                  <v-btn color="green" size="large" variant="flat" @click="goToLogin">
+                    <v-icon start>mdi-login</v-icon>
+                    Iniciar sesión
+                  </v-btn>
 
-              <div class="d-flex flex-column flex-sm-row justify-center gap-4">
-                <v-btn color="green" size="large" variant="flat" @click="goToLogin">
-                  <v-icon start>mdi-login</v-icon>
-                  Iniciar sesión
-                </v-btn>
-
-                <v-btn color="green" size="large" variant="outlined" @click="goToSignUp">
-                  <v-icon start>mdi-account-plus</v-icon>
-                  Crear cuenta
-                </v-btn>
-              </div>
+                  <v-btn color="green" size="large" variant="outlined" @click="goToSignUp">
+                    <v-icon start>mdi-account-plus</v-icon>
+                    Crear cuenta
+                  </v-btn>
+                </div>
+              </template>
+              <template v-else>
+                <div>
+                  <v-btn color="green" href="/recipes">Mis recetas</v-btn>
+                </div>
+              </template>
             </v-col>
           </v-row>
         </v-container>
