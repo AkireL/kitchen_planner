@@ -1,7 +1,8 @@
 import { initData } from '@/helpers/days';
+import type { Recipes } from '@/types';
 import dayjs from 'dayjs';
 
-export function getDayOfDate(date: string) {
+export function getDayOfDate(date: string): number {
   const [year, month, day] = date.split('-');
   const formattedDate = `${year}-${month}-${day}`;
 
@@ -10,20 +11,20 @@ export function getDayOfDate(date: string) {
   return dateTmp.getDay();
 }
 
-export function formatDate(date: Date) {
+export function formatDate(date: Date): string {
   return dayjs(date).format('YYYY-MM-DD');
 }
 
-export function getDateByString(date: string) {
+export function getDateByString(date: string): string {
   const [year, month, day] = date.split('-');
   return `${year}-${month}-${day}`;
 }
 
-export function getTodayDate() {
+export function getTodayDate(): string {
   return dayjs().format('YYYY-MM-DD');
 }
 
-export function getFirstAndLastDayOfWeek(date: Date) {
+export function getFirstAndLastDayOfWeek(date: Date): { firstDay: Date; lastDay: Date } {
   const firstDay = new Date(date);
   const lastDay = new Date(date);
 
@@ -42,7 +43,7 @@ export function getDay(date: string): number {
   return dateObj.getDate();
 }
 
-export function getNextWeek(startDate: Date) {
+export function getNextWeek(startDate: Date): { start: Date; end: Date } {
   const date = getFirstAndLastDayOfWeek(startDate);
   const start = date.firstDay;
 
@@ -78,7 +79,7 @@ export function getPreviousWeek(startDate: Date) {
   };
 }
 
-export function getWeekDays(startDate: Date, endDate: Date) {
+export function getWeekDays(startDate: Date, endDate: Date): Recipes[] {
   const daysOfWeek = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -93,8 +94,8 @@ export function getWeekDays(startDate: Date, endDate: Date) {
     result.push({
       id: start.getDay() == 0 ? 7 : start.getDay(),
       day: daysOfWeek[start.getDay()],
-      date: start.toLocaleDateString('en-CA'),
       list: [],
+      date: start.toLocaleDateString('en-CA'),
     });
 
     start.setDate(start.getDate() + 1);
@@ -108,8 +109,21 @@ export function getWeekDays(startDate: Date, endDate: Date) {
 }
 
 export function truncateText(text: string, maxLength: number = 150): string {
+  if (text === null || text === undefined) {
+    return '';
+  }
+
   if (text.length <= maxLength) {
     return text;
   }
   return text.slice(0, maxLength) + '...';
+}
+
+export function getMonthName(date: Date, locale = 'es-ES'): string {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  if (Number.isNaN(dateObj.getTime())) {
+    return '';
+  }
+  const month = new Intl.DateTimeFormat(locale, { month: 'long' }).format(dateObj);
+  return month.charAt(0).toUpperCase() + month.slice(1);
 }
