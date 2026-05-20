@@ -66,7 +66,7 @@ function submit(data: logInInterface) {
 
       if (e.response?.data?.detail !== undefined) {
         if (Array.isArray(e.response.data.detail)) {
-          error.value = e.response.data.detail.map((element: any) => element.msg).join(', ');
+          error.value = e.response.data.detail.map((element: { msg: string }) => element.msg).join(', ');
         } else {
           error.value = e.response.data.detail;
         }
