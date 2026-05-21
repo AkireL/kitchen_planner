@@ -34,6 +34,7 @@ const recipe = ref<Recipe>({
   schedule_at: getTodayDate(),
   ingredients: [],
   preparation: '',
+  user_id: 0,
 });
 
 onMounted(() => {

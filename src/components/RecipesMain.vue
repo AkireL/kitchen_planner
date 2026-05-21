@@ -17,7 +17,7 @@ import {
 import HomeView from '@/views/MainLayout.vue';
 
 import { useRouter } from 'vue-router';
-import { computed, ref, onMounted, watch } from 'vue';
+import { computed, ref, onMounted, watch, reactive } from 'vue';
 import {
   getDayOfDate,
   getDateByString,
@@ -38,12 +38,19 @@ const userStore = useUserStore();
 
 const isOpen = ref<boolean>(false);
 const recipeSelected = ref<Recipe | null>(null);
-const selectedDate = ref<RangeDate>({ firstDate: null, lastDate: null });
-const currentDate = ref<RangeDate>({ firstDate: null, lastDate: null });
+
+const { firstDay, lastDay } = getFirstAndLastDayOfWeek(new Date());
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const selectedDate = reactive<RangeDate>({ firstDate: firstDay, lastDate: lastDay });
+const currentDate = reactive<RangeDate>({ firstDate: firstDay, lastDate: lastDay });
 const preparedRecipes = ref(new Set<string>());
 const expandedDays = ref<Set<number>>(new Set());
 
 const toggleDay = (dayId: number) => {
+  if (isNaN(dayId)) {
+    return;
+  }
+
   if (expandedDays.value.has(dayId)) {
     expandedDays.value.delete(dayId);
     return;
@@ -52,20 +59,16 @@ const toggleDay = (dayId: number) => {
 };
 
 const isDayExpanded = (dayId: number) => {
+  if (isNaN(dayId)) {
+    return false;
+  }
+
   return expandedDays.value.has(dayId);
 };
 
 onMounted(() => {
-  const { firstDay, lastDay } = getFirstAndLastDayOfWeek(new Date());
-  selectedDate.value.firstDate = firstDay;
-  selectedDate.value.lastDate = lastDay;
+  store.retrieveRecipes(currentDate.firstDate, currentDate.lastDate);
 
-  currentDate.value.firstDate = firstDay;
-  currentDate.value.lastDate = lastDay;
-
-  store.retrieveRecipes(currentDate.value.firstDate, currentDate.value.lastDate);
-
-  // Expand today's day by default
   const todayDay = new Date().getDay();
   const dayIndex = todayDay === 0 ? 7 : todayDay;
   expandedDays.value.add(dayIndex);
@@ -74,17 +77,17 @@ onMounted(() => {
 watch(
   currentDate,
   async () => {
-    store.retrieveRecipes(currentDate.value.firstDate, currentDate.value.lastDate);
+    store.retrieveRecipes(currentDate.firstDate, currentDate.lastDate);
   },
-  { deep: true },
+  { deep: true, immediate: false },
 );
 
 const recipes = computed(() => {
-  if (!currentDate.value.firstDate || !currentDate.value.lastDate) {
+  if (!currentDate.firstDate || !currentDate.lastDate) {
     return;
   }
 
-  const newData = getWeekDays(currentDate.value.firstDate, currentDate.value.lastDate);
+  const newData = getWeekDays(currentDate.firstDate, currentDate.lastDate);
 
   for (const recipe of store.recipesList) {
     if (!recipe.schedule_at) {
@@ -105,7 +108,10 @@ const today = computed(() => {
 });
 
 const isToday = (dateStr: string | null) => {
-  if (!dateStr) return false;
+  if (!dateStr) {
+    return false;
+  }
+
   return dateStr === today.value;
 };
 
@@ -113,25 +119,31 @@ const isPrepared = (recipeId: number | string) => {
   return preparedRecipes.value.has(String(recipeId));
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getNextDate = () => {
-  if (!currentDate.value.firstDate) {
+  if (!currentDate.firstDate) {
     return;
   }
 
-  const date = getNextWeek(currentDate.value.firstDate);
+  const date = getNextWeek(currentDate.firstDate);
 
-  currentDate.value.firstDate = date.start;
-  currentDate.value.lastDate = date.end;
+  Object.assign(currentDate, {
+    firstDate: date.start,
+    lastDate: date.end,
+  });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getPreviousDate = () => {
-  if (!currentDate.value.firstDate) {
+  if (!currentDate.firstDate) {
     return;
   }
 
-  const date = getPreviousWeek(currentDate.value.firstDate);
-  currentDate.value.firstDate = date.start;
-  currentDate.value.lastDate = date.end;
+  const date = getPreviousWeek(currentDate.firstDate);
+  Object.assign(currentDate, {
+    firstDate: date.start,
+    lastDate: date.end,
+  });
 };
 
 const goToDetail = (id: number | string) => {
@@ -187,11 +199,11 @@ const addedRecipe = () => {
         elevation="0"
       >
         <!-- Day header -->
-        <v-card-title class="day-header py-2" @click="toggleDay(item.id)">
+        <v-card-title class="day-header py-2" @click="toggleDay(Number(item.id))">
           <div class="d-flex align-center flex-wrap flex-md-nowrap gap-2">
             <v-icon
               size="small"
-              :class="{ 'rotate-90': isDayExpanded(item.id) }"
+              :class="{ 'rotate-90': isDayExpanded(Number(item.id)) }"
               class="expand-icon mr-1"
             >
               mdi-chevron-right
@@ -225,7 +237,7 @@ const addedRecipe = () => {
 
         <!-- Recipes list -->
         <v-expand-transition>
-          <v-card-text v-show="isDayExpanded(item.id)" class="pa-0">
+          <v-card-text v-show="isDayExpanded(Number(item.id))" class="pa-0">
             <v-list v-if="item.list.length > 0" density="compact">
               <v-list-item
                 v-for="recipe in item.list"
@@ -239,7 +251,7 @@ const addedRecipe = () => {
                   :class="{ 'text-done': isPrepared(recipe.id) }"
                 >
                   <p class="font-weight-semibold">{{ recipe.title }}</p>
-                  <p class="text-caption pl-3">{{ truncateText(recipe.preparation) }}</p>
+                  <p class="text-caption pl-3">{{ truncateText(recipe.preparation ?? '') }}</p>
                 </v-list-item-title>
 
                 <template #append>

@@ -34,46 +34,36 @@ const router = useRouter();
 
 const rules = (value: string | number | Date) => !!value || 'Este campo es obligatorio.';
 
-function submit(data: logInInterface) {
-  if (!data || !data.password || !data.username) {
+function submit(payload: logInInterface) {
+  if (!payload?.password || !payload?.username) {
     error.value = 'Todos los campos son requeridos';
-    setTimeout(() => {
-      error.value = '';
-    }, 2000);
+
     return;
   }
 
+  error.value = '';
   loading.value = true;
 
-  logIn(data)
+  logIn(payload)
     .then(({ data }) => {
       store.setToken(data.access_token);
 
-      getCurrentUser()
-        .then(({ data }) => {
-          store.setUser(data);
-          router.push({ name: 'homeRecipe' });
-        })
-        .catch((e) => {
-          console.log('ERROR GET USER');
-          console.log(e);
-        });
+      return getCurrentUser();
+    })
+    .then(({ data }) => {
+      store.setUser(data);
+      router.push({ name: 'homeRecipe' });
     })
     .catch((e) => {
-      console.log('Error LogIn');
-      console.log(e);
-      loading.value = true;
-
       if (e.response?.data?.detail !== undefined) {
         if (Array.isArray(e.response.data.detail)) {
-          error.value = e.response.data.detail.map((element: any) => element.msg).join(', ');
+          error.value = e.response.data.detail
+            .map((element: { msg: string }) => element.msg)
+            .join(', ');
         } else {
           error.value = e.response.data.detail;
         }
 
-        setTimeout(() => {
-          error.value = '';
-        }, 2000);
         return;
       }
 
@@ -81,8 +71,12 @@ function submit(data: logInInterface) {
         error.value = 'Credenciales incorrectas.';
         return;
       }
+
+      error.value = 'Servicio no disponible. Por favor, inténtalo de nuevo más tarde.';
     })
-    .finally(() => (loading.value = false));
+    .finally(() => {
+      loading.value = false;
+    });
 }
 </script>
 <template>

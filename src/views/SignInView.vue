@@ -16,16 +16,14 @@ import {
 import { useRouter } from 'vue-router';
 import type { userInterface } from '@/types';
 
-const userForm = {
+const loading = ref<boolean>(false);
+
+const form = ref<userInterface>({
   username: '',
   email: '',
   fullname: '',
   password: '',
-};
-
-const loading = ref<boolean>(false);
-
-const form = ref<userInterface>(userForm);
+});
 const showPassword = ref<boolean>(false);
 
 const rules = (value: string | number | Date) => !!value || 'Este campo es obligatorio';
@@ -34,20 +32,17 @@ const error = ref<string>('');
 const store = useUserStore();
 const router = useRouter();
 
-function submit(data: userInterface) {
-  if (!data || Object.values(data).some((v) => !v)) {
+function submit(payload: userInterface) {
+  if (!payload || Object.values(payload).some((v) => !v)) {
     error.value = 'Todos los campos son requeridos';
-    setTimeout(() => {
-      error.value = '';
-    }, 2000);
+
     return;
   }
 
-  const value = {
-    ...data,
-  };
+  error.value = '';
+  loading.value = true;
 
-  signIn(value)
+  signIn(payload)
     .then(({ data }) => {
       store.setToken(data.data.jwt);
       store.setUser(data.data.user);
@@ -57,15 +52,25 @@ function submit(data: userInterface) {
     .catch((e) => {
       if (e.response?.data?.detail) {
         if (Array.isArray(e.response.data.detail)) {
-          error.value = e.response.data.detail.map((element: any) => element.msg).join(', ');
+          error.value = e.response.data.detail
+            .map((element: { msg: string }) => element.msg)
+            .join(', ');
         } else {
           error.value = e.response.data.detail;
         }
 
-        setTimeout(() => {
-          error.value = '';
-        }, 2000);
+        return;
       }
+
+      if (e.response?.data?.message) {
+        error.value = e.response.data.message;
+        return;
+      }
+
+      error.value = 'Servicio no disponible. Por favor, inténtalo de nuevo más tarde.';
+    })
+    .finally(() => {
+      loading.value = false;
     });
 }
 </script>

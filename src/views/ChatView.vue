@@ -354,6 +354,7 @@ async function scrollToBottom() {
   el.scrollTop = el.scrollHeight;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function updateAssistantDraftAt(index: number, text: string) {
   const message = messages.value[index];
 

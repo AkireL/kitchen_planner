@@ -38,7 +38,11 @@ export function getFirstAndLastDayOfWeek(date: Date): { firstDay: Date; lastDay:
   };
 }
 
-export function getDay(date: string): number {
+export function getDay(date: string | null): number {
+  if (!date) {
+    return NaN;
+  }
+
   const dateObj = new Date(date);
   return dateObj.getDate();
 }
