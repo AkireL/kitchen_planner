@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  VList,
-  VListItem,
-  VTextField,
-  VBtn,
-} from 'vuetify/components'
+import { VList, VListItem, VTextField, VBtn } from 'vuetify/components';
 
 const model = defineModel({
   type: Array<string>,
@@ -13,7 +8,7 @@ const model = defineModel({
 
 const removeIngredient = (index: string | number) => {
   model.value = model.value.filter((_, i) => index != i);
-}
+};
 </script>
 <template>
   <v-list style="width: 50%" class="p-0">
