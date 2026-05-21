@@ -47,6 +47,10 @@ const preparedRecipes = ref(new Set<string>());
 const expandedDays = ref<Set<number>>(new Set());
 
 const toggleDay = (dayId: number) => {
+  if (isNaN(dayId)) {
+    return;
+  }
+
   if (expandedDays.value.has(dayId)) {
     expandedDays.value.delete(dayId);
     return;
@@ -55,6 +59,10 @@ const toggleDay = (dayId: number) => {
 };
 
 const isDayExpanded = (dayId: number) => {
+  if (isNaN(dayId)) {
+    return false;
+  }
+
   return expandedDays.value.has(dayId);
 };
 
@@ -100,7 +108,10 @@ const today = computed(() => {
 });
 
 const isToday = (dateStr: string | null) => {
-  if (!dateStr) return false;
+  if (!dateStr) {
+    return false;
+  }
+
   return dateStr === today.value;
 };
 
@@ -188,11 +199,11 @@ const addedRecipe = () => {
         elevation="0"
       >
         <!-- Day header -->
-        <v-card-title class="day-header py-2" @click="toggleDay(item.id)">
+        <v-card-title class="day-header py-2" @click="toggleDay(Number(item.id))">
           <div class="d-flex align-center flex-wrap flex-md-nowrap gap-2">
             <v-icon
               size="small"
-              :class="{ 'rotate-90': isDayExpanded(item.id) }"
+              :class="{ 'rotate-90': isDayExpanded(Number(item.id)) }"
               class="expand-icon mr-1"
             >
               mdi-chevron-right
@@ -226,7 +237,7 @@ const addedRecipe = () => {
 
         <!-- Recipes list -->
         <v-expand-transition>
-          <v-card-text v-show="isDayExpanded(item.id)" class="pa-0">
+          <v-card-text v-show="isDayExpanded(Number(item.id))" class="pa-0">
             <v-list v-if="item.list.length > 0" density="compact">
               <v-list-item
                 v-for="recipe in item.list"
@@ -240,7 +251,7 @@ const addedRecipe = () => {
                   :class="{ 'text-done': isPrepared(recipe.id) }"
                 >
                   <p class="font-weight-semibold">{{ recipe.title }}</p>
-                  <p class="text-caption pl-3">{{ truncateText(recipe.preparation) }}</p>
+                  <p class="text-caption pl-3">{{ truncateText(recipe.preparation ?? '') }}</p>
                 </v-list-item-title>
 
                 <template #append>
